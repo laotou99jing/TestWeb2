@@ -1,4 +1,4 @@
-<!-- <h1>123abc</h1> -->
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -8,10 +8,12 @@
 </head>
 <body>
   <div id="app">
+
     <el-button @click="visible = true">Button</el-button>
     <el-dialog :visible.sync="visible" title="Hello world">
       <p>Try Element</p>
     </el-dialog>
+    
   </div>
 </body>
   <!-- import Vue before Element -->
@@ -21,9 +23,23 @@
   <script>
     new Vue({
       el: '#app',
-      data: function() {
-        return { visible: false }
+      data() {
+        return { 
+          visible: false 
+        };
+      },
+      created() {
+          console.log("created");
+      },
+      mounted(){
+        console.log("mounted")
+      },
+      methods: {
+        abc(){
+          console.log(" abc()");
+        }
       }
     })
   </script>
 </html>
+

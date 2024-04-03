@@ -1,3 +1,89 @@
-<h1>
-AAABBCC123321
-</h1>
+<!-- <h1>AAABBCC123321</h1> -->
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>a2测试</title>
+  <!-- import CSS 
+  <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+  -->
+<link href="https://cdn.bootcdn.net/ajax/libs/element-ui/2.15.14/theme-chalk/index.css" rel="stylesheet">
+</head>
+<body>
+  <div id="app">
+    <el-button @click="visible = true">Button</el-button>
+    <el-dialog :visible.sync="visible" title="Hello world">
+      <p>Try Element</p>
+    </el-dialog>
+
+
+    <el-button @click="click1">挖矿</el-button>
+    <el-button @click="click2">金额</el-button>
+    
+  </div>
+</body>
+  <!-- import Vue before Element 
+  <script src="https://unpkg.com/vue@2/dist/vue.js"></script>
+  -->
+  <script src="https://cdn.bootcdn.net/ajax/libs/vue/2.7.9/vue.js"></script>
+  <!-- import JavaScript 
+  <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+  -->
+  <script src="https://cdn.bootcdn.net/ajax/libs/element-ui/2.15.14/index.js"></script>
+  <script src="https://cdn.bootcdn.net/ajax/libs/crypto-js/4.1.1/crypto-js.js"></script>
+  <script src="a2.js"></script>
+  <script type="text/javascript">
+
+
+    new Vue({
+      el: '#app',
+      data: function() {
+        return { 
+        	visible: false,
+        	a2Test: null
+        }
+      },
+      created() {
+          console.log("created");
+          this.a2Test = new A2Test();
+          /*
+          var str = '123456';
+          console.log(CryptoJS.MD5(str).toString());
+          */
+          this.init();
+      },
+      mounted(){
+        console.log("mounted");
+        /*
+        var hash = CryptoJS.MD5("Message");
+        console.log('hash-=>',hash.toString());
+        var hash2 = CryptoJS.SHA1("Message");
+        console.log('hash2-=>',hash2.toString());
+        var hash3 = CryptoJS.SHA256("Message");
+        console.log('hash3-=>',hash3.toString());
+        var hash4 = CryptoJS.SHA512("Message");
+        console.log('hash4-=>',hash4.toString());
+        var hash5 = CryptoJS.SHA3("Message");
+        console.log('hash5-=>',hash5.toString());
+        var hash6 = CryptoJS.RIPEMD160("Message");
+        console.log('hash6-=>',hash6.toString());
+        */
+      },
+      methods: {
+        abc(){
+      		console.log(" abc()");
+        },
+        init(){
+    		console.log("init()");
+
+        },
+        click1(){
+        	this.a2Test.mine1();
+        },
+        click2(){
+        	this.a2Test.blance1(); 
+        }
+      }
+    })
+  </script>
+</html>
