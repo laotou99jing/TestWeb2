@@ -4,10 +4,12 @@
 <head>
   <meta charset="UTF-8">
   <title>a2测试</title>
-  <!-- import CSS 
+  <!-- import CSS  
   <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
-  -->
-<link href="https://cdn.bootcdn.net/ajax/libs/element-ui/2.15.14/theme-chalk/index.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/index.css">-->
+  <!---->
+  <link href="https://cdn.bootcdn.net/ajax/libs/element-ui/2.15.14/theme-chalk/index.css" rel="stylesheet">
+  
 </head>
 <body>
   <div id="app">
@@ -19,18 +21,35 @@
 
     <el-button @click="click1">挖矿</el-button>
     <el-button @click="click2">金额</el-button>
+    <el-button @click="click4">生成钱包地址</el-button>
+	<p>
+		钱包金额: {{ walletAmount }}
+	</p>
+	<p>
+		钱包地址： {{ walletAddr }}
+	</p>
     
+	<p>
+		钱包私匙： {{ walletPrv }}
+	</p>
+	
   </div>
 </body>
   <!-- import Vue before Element 
   <script src="https://unpkg.com/vue@2/dist/vue.js"></script>
+  <script src="js/vue.js"></script>
   -->
+  <!-- -->
   <script src="https://cdn.bootcdn.net/ajax/libs/vue/2.7.9/vue.js"></script>
   <!-- import JavaScript 
   <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+  <script src="js/index.js"></script>
+  <script src="js/crypto-js.js"></script>
   -->
+  <!-- -->
   <script src="https://cdn.bootcdn.net/ajax/libs/element-ui/2.15.14/index.js"></script>
   <script src="https://cdn.bootcdn.net/ajax/libs/crypto-js/4.1.1/crypto-js.js"></script>
+  
   <script src="a2.js"></script>
   <script type="text/javascript">
 
@@ -40,7 +59,10 @@
       data: function() {
         return { 
         	visible: false,
-        	a2Test: null
+        	a2Test: null,
+			walletAddr: '',
+			walletPrv: '',
+			walletAmount:0
         }
       },
       created() {
@@ -51,6 +73,7 @@
           console.log(CryptoJS.MD5(str).toString());
           */
           this.init();
+          //this.init2();
       },
       mounted(){
         console.log("mounted");
@@ -73,17 +96,89 @@
         abc(){
       		console.log(" abc()");
         },
+        init2(){
+    		console.log("init2()");
+			var arr2s = [1,2,3,4,5,6];
+			console.log("arr2s.every=>",
+				arr2s.every( v => this.print1(v))
+			)
+		},
+		print1(e){
+			console.log("print1 e-=>",e);
+			return true;
+		},
         init(){
     		console.log("init()");
-
+			
+			this.walletAddr = localStorage.getItem('walletAddr');
+			this.walletPrv = localStorage.getItem('walletPrv');
+			
+			this.walletAmount = this.a2Test.blance1();
         },
         click1(){
         	this.a2Test.mine1();
         },
         click2(){
-        	this.a2Test.blance1(); 
-        }
+			/*
+			console.log("blance1()-=>",
+				this.a2Test.blance1()
+			) 
+			*/
+			this.walletAmount = this.a2Test.blance1();
+        },
+		click4(){
+			/*
+			console.log("generateWalletAddr()-=>",
+				this.a2Test.generateWalletAddr()
+			)
+			*/
+			if(this.checkWalk()){				
+				var arr1 = this.a2Test.generateWalletAddr();
+				
+				this.walletAddr = arr1[1];
+				this.walletPrv = arr1[0];
+				localStorage.setItem('walletAddr',arr1[1])
+				localStorage.setItem('walletPrv',arr1[0])
+				
+			}else{
+				//vant.Toast('已有钱包，不可再生成');
+				this.$message('已有钱包，不可再生成');
+			}
+		},
+		checkWalk(){
+			var wad = localStorage.getItem('walletAddr');
+			
+			if(wad === null || wad=='' || wad === undefined){}else{
+				return false
+			}
+			return true;
+		}
       }
     })
+	
+/*
+const sha256 = CryptoJS.algo.SHA256.create();
+sha256.update(String(value));
+const hash = sha256.finalize().toString();
+
+var hmac = CryptoJS.algo.HMAC.create(CryptoJS.algo.SHA256, "Secret Passphrase");
+hmac.update("Message Part 1");
+hmac.update("Message Part 2");
+hmac.update("Message Part 3");
+​
+var hash = hmac.finalize();
+
+
+
+
+
+
+
+
+
+
+
+
+*/	
   </script>
 </html>

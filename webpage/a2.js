@@ -6,10 +6,14 @@
  * */
 
 
+var pub1 = localStorage.getItem('walletAddr');
+var prv1 = localStorage.getItem('walletPrv');
+console.log("pub1-=>"+pub1+",prv1-=>"+prv1);
+
 const key = {
 	keys:{
-		pub: 'fadf3f23faffadf',
-		prv: 'fa3efadfasfaee123',
+		pub: pub1,
+		prv: prv1,
 	},
 	sign:function({from, to, amount, timestamp }){
 		console.log("sign-=>",from);
@@ -56,6 +60,22 @@ class Blockchain{
 
 		this.init();
 
+	}
+	generateWalletAddr(){
+		console.log("generateWalletAddr()");
+		var arr1s = [];
+		const timestamp = new Date().getTime();
+		const sha256 = CryptoJS.algo.SHA256.create();
+		sha256.update(String(timestamp));
+		const hash1 = sha256.finalize().toString();
+		console.log("hash1-=>",hash1);
+		arr1s.push(hash1);
+		var hmac = CryptoJS.algo.HMAC.create(CryptoJS.algo.SHA512,String(timestamp));
+		hmac.update(hash1);
+		var hash2 = hmac.finalize().toString();
+		console.log("hash2-=>",hash2);
+		arr1s.push(hash2);
+		return arr1s
 	}
 	showData(){
 		console.log("showData()");
@@ -287,7 +307,14 @@ class Blockchain{
 	A2Test.prototype.blance1 = function(){
 		console.log("blance1");
 			
-		console.log("blance-=>",blockchain.blance())
+		//console.log("blance-=>",blockchain.blance())
+		return blockchain.blance();
+	}
+	
+	A2Test.prototype.generateWalletAddr = function(){
+		console.log("generateWalletAddr");
+		
+		return blockchain.generateWalletAddr();
 	}
 
 })();
