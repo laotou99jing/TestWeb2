@@ -21,7 +21,10 @@
 
     <el-button @click="click1">挖矿</el-button>
     <el-button @click="click2">金额</el-button>
+    <el-button @click="click3">测试数据库1</el-button>
     <el-button @click="click4">生成钱包地址</el-button>
+	<el-button @click="click5">删除整个链条库</el-button>
+    	
 	<p>
 		钱包金额: {{ walletAmount }}
 	</p>
@@ -46,10 +49,13 @@
   <script src="js/index.js"></script>
   <script src="js/crypto-js.js"></script>
   -->
-  <!-- -->
+  
   <script src="https://cdn.bootcdn.net/ajax/libs/element-ui/2.15.14/index.js"></script>
   <script src="https://cdn.bootcdn.net/ajax/libs/crypto-js/4.1.1/crypto-js.js"></script>
-  
+  <script src="https://cdn.bootcdn.net/ajax/libs/pouchdb/8.0.1/pouchdb.js"></script>
+  <!-- 
+  <script src="https://unpkg.com/pouchdb@8.0.1/dist/pouchdb.find.js"></script>
+  -->
   <script src="a2.js"></script>
   <script type="text/javascript">
 
@@ -126,6 +132,11 @@
 			*/
 			this.walletAmount = this.a2Test.blance1();
         },
+		click3(){
+			console.log("test1()-=>",
+				this.a2Test.test2()
+			)
+		},
 		click4(){
 			/*
 			console.log("generateWalletAddr()-=>",
@@ -144,6 +155,13 @@
 				//vant.Toast('已有钱包，不可再生成');
 				this.$message('已有钱包，不可再生成');
 			}
+		},
+		click5(){
+			
+			console.log("destroyDataBase()-=>",
+				this.a2Test.destroyDataBase()
+			)
+			
 		},
 		checkWalk(){
 			var wad = localStorage.getItem('walletAddr');
@@ -168,8 +186,59 @@ hmac.update("Message Part 3");
 ​
 var hash = hmac.finalize();
 
+--PouchDB
+db.allDocs({include_docs: true})
+
+db.destroy().then(function (response) {
+        // success
+  }).catch(function (err) {
+        console.log(err);
+  });
+
+db.put({
+      _id: 'mydoc',
+      title: 'Heroes'
+ }).then(function (response) {
+     // handle response
+ }).catch(function (err) {
+     console.log(err);
+ });
+
+db.get('mydoc').then(function(doc) {
+      return db.put({
+        _id: 'mydoc',
+        _rev: doc._rev,
+        title: "Let's Dance"
+      });
+ }).then(function(response) {
+      // handle response
+      }).catch(function (err) {
+      console.log(err);
+});
+db.get('mydoc').then(function (doc) {
+    // handle doc
+}).catch(function (err) {
+    console.log(err);
+});
+db.get('mydoc').then(function(doc) {
+        return db.remove(doc);
+}).then(function (result) {
+        // handle result
+}).catch(function (err) {
+        console.log(err);
+ });
 
 
+
+2024-04-05 碰到的问题
+考虑下如何确保两条链相等。
+一条是内存链，一条是存储链。
+如何确保这两条链相等。
+
+是否考虑每10秒，做一次全局汇总，将正确的哈希链进入链表。
+
+加入矿池的概念，考虑怎么同步矿池，还是说，不用同步矿池。不要考虑有限金额的问题。
+也就是说币数是无限的。不考虑做有限币。
 
 
 

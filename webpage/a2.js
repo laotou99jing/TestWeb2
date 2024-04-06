@@ -267,7 +267,11 @@ class Blockchain{
 	}
 	init(){
 		console.log('init()');
-
+		//初始化链条
+		
+		//查看缓存中有没有已有的链条
+		
+		//将缓存中的链条还原到内存中
 	}
 	hi(){
 		console.log('Blockchain hi');
@@ -278,30 +282,51 @@ class Blockchain{
 	console.log("a2.js start");
 
 	const blockchain = new Blockchain();
+	
+	const chainDB = new PouchDB('chainDatabase');
 
 	this.A2Test = function(){
+		
 		this.init();
 	}
 	
 	A2Test.prototype.init = function(){
 		console.log('init');
+		console.log("step1");
+		chainDB.info().then(function(info){
+			console.log("info-=>",info);
+		});
+		console.log("step2");
+		
 		blockchain.hi();
 
 		blockchain.showBlockChain();
 		console.log("开始挖币");
-		blockchain.mine();
-
+		/*
+		console.log("blockchain.mine()-=>",
+			blockchain.mine()
+		);
+		*/
+		var bc1 = blockchain.mine();
 		blockchain.showBlockChain();
+		
+		this.addChainToDB(bc1);
 	}
 
 	A2Test.prototype.mine1 = function(){
 		console.log("mine1()");
 
 		console.log("开始挖币");
-		blockchain.mine();
+		/*
+		console.log("blockchain.mine()-=>",
+			blockchain.mine()
+		);
+		*/
 
+		var bc2 = blockchain.mine();
 		blockchain.showBlockChain();
 		blockchain.showData();
+		this.addChainToDB(bc2);
 	}
 
 	A2Test.prototype.blance1 = function(){
@@ -317,4 +342,109 @@ class Blockchain{
 		return blockchain.generateWalletAddr();
 	}
 
+	A2Test.prototype.test1 =  function(){
+		console.log("test1");
+		
+		chainDB.put({
+			_id: new Date().getTime(),
+			title: 'abc',
+			completed: false
+		}, (err,resp) =>{
+			if(!err){
+				console.log("Successfully posted")
+			}
+		});
+		
+		return "ok";
+	}
+	
+	A2Test.prototype.test2 =  function(){
+		console.log("test2");
+		arrs1 = [];
+		chainDB.allDocs({
+			include_docs: true,
+			descending: true
+		}, (err,doc) => {
+			if(!err){
+				console.log("doc-=>",doc);
+				//console.log("doc.rows-=>",doc.rows);
+				console.log("doc.total_rows-=>",doc.total_rows);
+				for(item1 of doc.rows){
+					console.log("item1-=>",item1.doc);
+					var ddd1 = item1.doc
+					arrs1.push(ddd1);
+				}
+				this.deletePDBs(arrs1);
+			}
+		});
+		
+	}
+	
+	A2Test.prototype.deletePDBs =  function(e){
+		console.log("test2",e);
+		for(i of e){
+			console.log("i-=>",i);
+			chainDB.remove(i);
+		}
+			
+	}
+	A2Test.prototype.addChainToDB = function(e){
+		console.log("addChainToDB",e);
+		chainDB.put({
+			_id: 'chainDB-'+e.index,
+			chainData: e,
+			rowst: true
+		},(err,resp) =>{
+			if(!err){
+				console.log("Successfully added")
+			}
+		});
+	}
+	
+	A2Test.prototype.destroyDataBase = function(e){
+		console.log("destroyDataBase");
+		
+		chainDB.destroy().then(function(response){
+			console.log("response-=>",response);
+		}).catch(function(err){
+			console.log("err-=>",err);
+		});
+		
+		return 'destroy ok';
+	}
+	
 })();
+/*
+db.get('mydoc').then(function (doc) {
+    // handle doc
+}).catch(function (err) {
+    console.log(err);
+});
+db.get('mydoc').then(function(doc) {
+      return db.put({
+        _id: 'mydoc',
+        _rev: doc._rev,
+        title: "Let's Dance"
+      });
+ }).then(function(response) {
+      // handle response
+      }).catch(function (err) {
+      console.log(err);
+});
+db.put({
+      _id: 'mydoc',
+      title: 'Heroes'
+ }).then(function (response) {
+     // handle response
+ }).catch(function (err) {
+     console.log(err);
+ });
+db.get('mydoc').then(function(doc) {
+        return db.remove(doc);
+}).then(function (result) {
+        // handle result
+}).catch(function (err) {
+        console.log(err);
+ });
+
+*/

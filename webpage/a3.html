@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>pouchdb</title>
+  <script src="https://libs.baidu.com/jquery/1.10.2/jquery.min.js"></script>
+  <script src="https://unpkg.com/pouchdb@8.0.1/dist/pouchdb.js"></script>
+  <script src="https://unpkg.com/pouchdb@8.0.1/dist/pouchdb.find.js"></script>
+  <style>
+    th {
+      width: 200px;
+    }
+    td {
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+  <button onclick="查询()">查询</button>
+  <br><br>
+  _id<input type="text" id="_id" />
+  <br>
+  a<input type="text" id="a" />
+  b<input type="text" id="b" />
+  <br><br>
+  <button onclick="新增数据()">新增数据</button>
+  <button onclick="修改数据()">修改数据</button>
+  <button onclick="删除数据()">删除数据</button>
+  <br><br>
+  <table id="example-table" border="1">
+    <thead>
+      <tr>
+        <th>_id</th>
+        <th>a</th>
+        <th>b</th>
+      </tr>
+    </thead>
+    <tbody>
+    </tbody>
+  </table>
+  <script>
+    var db = new PouchDB('my_db');
+
+    async function 查询() {
+      //查
+      const data = await db.find({
+        selector: {},
+        sort: [
+          { '_id': 'asc' },//asc 升序 desc 降序
+        ],
+        fields: ['id', 'a', 'b'],//'_id', '_rev', 
+      })
+      console.log('查询', data.docs)
+      const tableBody = document.getElementById('example-table').getElementsByTagName('tbody')[0];
+      // 清空表格
+      tableBody.innerHTML = '';
+
+      // 循环遍历数组对象，创建表格的行和单元格
+      for (let i = 0; i < data.docs.length; i++) {
+        const row = tableBody.insertRow(i);
+        const idCell = row.insertCell(0);
+        const aCell = row.insertCell(1);
+        const bCell = row.insertCell(2);
+
+        idCell.innerHTML = data.docs[i].id;
+        aCell.innerHTML = data.docs[i].a;
+        bCell.innerHTML = data.docs[i].b;
+      }
+      $('#_id').val('')
+      $('#a').val('')
+      $('#b').val('')
+    }
+
+    async function 新增数据() {
+      const a = $('#a').val()
+      const b = $('#b').val()
+      await db.put({
+        _id: String(Date.now()),
+        id: Date.now(),
+        a,
+        b,
+      })
+      console.log('新增数据成功')
+      查询()
+    }
+
+    async function 修改数据() {
+      const _id = $('#_id').val()
+      const a = $('#a').val()
+      const b = $('#b').val()
+      if (!_id) {
+        console.log('请填写_id')
+        return
+      }
+      const doc = await db.get(_id)
+      // console.log(doc)
+      await db.put({
+        ...doc,
+        a,
+        b,
+      })
+      console.log('修改数据成功')
+      查询()
+    }
+
+    async function 删除数据() {
+      const _id = $('#_id').val()
+      if (!_id) {
+        console.log('请填写_id')
+        return
+      }
+      const doc = await db.get(_id)
+      await db.remove(doc)
+      console.log('删除数据成功')
+      查询()
+    }
+
+    查询()
+
+  </script>
+</body>
+
+</html>
