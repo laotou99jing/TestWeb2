@@ -1,6 +1,6 @@
 /**
  * 
- * 
+ * 区块链测试脚本
  * 
  * 
  * */
@@ -60,6 +60,21 @@ class Blockchain{
 
 		this.init();
 
+	}
+	initChainData(db){}
+	checkLocalCacheDB(db){
+		console.log("checkLocalCacheDB()",db==null);
+		/*
+		const var1 = db.allDocs({include_docs: true});
+		console.log("var1-=>",var1);
+		*/
+		db.allDocs({include_docs: true}).then( (resp) =>{
+			console.log("resp-=>",resp);
+		}).catch((err) => {
+			console.log("err-=>",err);
+		})
+		
+		return true;
 	}
 	generateWalletAddr(){
 		console.log("generateWalletAddr()");
@@ -269,12 +284,15 @@ class Blockchain{
 		console.log('init()');
 		//初始化链条
 		
-		//查看缓存中有没有已有的链条
-		
-		//将缓存中的链条还原到内存中
 	}
-	hi(){
+	hi(db){
 		console.log('Blockchain hi');
+		//查看缓存中有没有已有的链条
+		if(this.checkLocalCacheDB(db)){
+		//将缓存中的链条还原到内存中
+			this.initChainData(db);
+		}
+		
 	}
 }
 
@@ -298,19 +316,43 @@ class Blockchain{
 		});
 		console.log("step2");
 		
-		blockchain.hi();
+		blockchain.hi(chainDB);
 
 		blockchain.showBlockChain();
-		console.log("开始挖币");
-		/*
-		console.log("blockchain.mine()-=>",
-			blockchain.mine()
-		);
-		*/
-		var bc1 = blockchain.mine();
-		blockchain.showBlockChain();
 		
-		this.addChainToDB(bc1);
+		if(this.cheDbCacheData()){
+			console.log("开始挖币");
+			/*
+			console.log("blockchain.mine()-=>",
+				blockchain.mine()
+			);
+			*/
+			var bc1 = blockchain.mine();
+			blockchain.showBlockChain();
+			
+			this.addChainToDB(bc1);
+		}else{
+			blockchain.initChainData(chainDB);
+		}
+		
+	}
+	
+	A2Test.prototype.cheDbCacheData = function(){
+		console.log("cheDbCacheData");
+		
+		
+		chainDB.allDocs({
+			include_docs: true,
+			descending: true
+		}, (err,doc) => {
+			if(!err){
+				console.log("doc.total_rows-=>",doc.total_rows);
+				if(doc.total_rows > 0){
+					return false;
+				}
+			}
+		});
+		return true;
 	}
 
 	A2Test.prototype.mine1 = function(){

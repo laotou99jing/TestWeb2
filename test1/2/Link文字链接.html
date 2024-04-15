@@ -1,0 +1,106 @@
+<!-- <h1>123abc</h1> -->
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title> 
+	Link 文字链接
+  </title>
+  <!-- import CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+<style>
+
+</style>
+</head>
+<body>
+  <div id="app">
+   Link 文字链接
+	<br>
+
+	文字超链接
+	<br>
+	
+	基础用法
+	<br>
+
+	基础的文字链接用法。
+	<br>
+<div>
+<div>
+  <el-link href="https://element.eleme.io" target="_blank">默认链接</el-link>
+  <el-link type="primary">主要链接</el-link>
+  <el-link type="success">成功链接</el-link>
+  <el-link type="warning">警告链接</el-link>
+  <el-link type="danger">危险链接</el-link>
+  <el-link type="info">信息链接</el-link>
+</div>
+</div>
+	<br>
+	<hr>
+ 禁用状态
+	<br>
+
+文字链接不可用状态。
+	<br>
+<div>
+  <el-link disabled>默认链接</el-link>
+  <el-link type="primary" disabled>主要链接</el-link>
+  <el-link type="success" disabled>成功链接</el-link>
+  <el-link type="warning" disabled>警告链接</el-link>
+  <el-link type="danger" disabled>危险链接</el-link>
+  <el-link type="info" disabled>信息链接</el-link>
+</div>
+	<br>
+	<hr>
+ 下划线
+	<br>
+
+文字链接下划线。
+	<br>
+<div>
+  <el-link :underline="false">无下划线</el-link>
+  <el-link>有下划线</el-link>
+</div>
+	<br>
+	<hr>
+图标
+	<br>
+
+带图标的文字链接可增强辨识度。
+	<br>
+<div>
+  <el-link icon="el-icon-edit">编辑</el-link>
+  <el-link>查看<i class="el-icon-view el-icon--right"></i> </el-link>
+</div>
+	<br>
+	<hr>
+
+
+
+  </div>
+</body>
+  <!-- import Vue before Element -->
+  <script src="https://unpkg.com/vue@2/dist/vue.js"></script>
+  <!-- import JavaScript -->
+  <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+  <script>
+    new Vue({
+      el: '#app',
+      data: function() {
+        return { visible: false }
+      }
+    })
+	
+	
+	/*
+	Attributes
+参数	说明	类型	可选值	默认值
+type	类型	string	primary / success / warning / danger / info	default
+underline	是否下划线	boolean	—	true
+disabled	是否禁用状态	boolean	—	false
+href	原生 href 属性	string	—	-
+icon	图标类名	string	—	-
+Button 按钮 
+	*/
+  </script>
+</html>
