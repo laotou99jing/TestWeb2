@@ -1,0 +1,167 @@
+<!-- <h1>123abc</h1> -->
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title> 
+	Badge标记
+  </title>
+  <!-- import CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+<style>
+.item {
+  margin-top: 10px;
+  margin-right: 40px;
+}
+.item {
+  margin-top: 10px;
+  margin-right: 40px;
+}
+.item {
+  margin-top: 10px;
+  margin-right: 40px;
+}
+.item {
+  margin-top: 10px;
+  margin-right: 40px;
+}
+</style>
+</head>
+<body>
+  <div id="app">
+  Badge 标记
+	<br>
+
+出现在按钮、图标旁的数字或状态标记。
+
+	<br>
+	<hr>
+基础用法
+	<br>
+
+展示新消息数量。
+	<br>
+	
+<div>
+定义value属性，它接受Number或者String。
+</div>
+<div>
+<el-badge :value="12" class="item">
+  <el-button size="small">评论</el-button>
+</el-badge>
+<el-badge :value="3" class="item">
+  <el-button size="small">回复</el-button>
+</el-badge>
+<el-badge :value="1" class="item" type="primary">
+  <el-button size="small">评论</el-button>
+</el-badge>
+<el-badge :value="2" class="item" type="warning">
+  <el-button size="small">回复</el-button>
+</el-badge>
+
+<el-dropdown trigger="click">
+  <span class="el-dropdown-link">
+    点我查看<i class="el-icon-caret-bottom el-icon--right"></i>
+  </span>
+  <el-dropdown-menu slot="dropdown">
+    <el-dropdown-item class="clearfix">
+      评论
+      <el-badge class="mark" :value="12" />
+    </el-dropdown-item>
+    <el-dropdown-item class="clearfix">
+      回复
+      <el-badge class="mark" :value="3" />
+    </el-dropdown-item>
+  </el-dropdown-menu>
+</el-dropdown>
+</div>
+	<br>
+	<hr>
+最大值
+	<br>
+
+可自定义最大值。	
+	<br>
+
+<div>
+由max属性定义，它接受一个Number，需要注意的是，只有当value为Number时，它才会生效。
+</div>
+<div>
+<el-badge :value="200" :max="99" class="item">
+  <el-button size="small">评论</el-button>
+</el-badge>
+<el-badge :value="100" :max="10" class="item">
+  <el-button size="small">回复</el-button>
+</el-badge>
+</div>
+	<br>
+	<hr>	
+自定义内容
+	<br>
+
+可以显示数字以外的文本内容。	
+	<br>
+
+<div>
+定义value为String类型是时可以用于显示自定义文本。
+</div>
+<div>
+<el-badge value="new" class="item">
+  <el-button size="small">评论</el-button>
+</el-badge>
+<el-badge value="hot" class="item">
+  <el-button size="small">回复</el-button>
+</el-badge>
+</div>
+	<br>
+	<hr>		
+	小红点
+	<br>
+
+以红点的形式标注需要关注的内容。
+	<br>
+
+<div>
+除了数字外，设置is-dot属性，它接受一个Boolean。
+</div>
+<div>
+<el-badge is-dot class="item">数据查询</el-badge>
+<el-badge is-dot class="item">
+  <el-button class="share-button" icon="el-icon-share" type="primary"></el-button>
+</el-badge>
+</div>
+	<br>
+	<hr>		
+	
+	
+	
+	
+	
+	
+	
+  </div>
+</body>
+  <!-- import Vue before Element -->
+  <script src="https://unpkg.com/vue@2/dist/vue.js"></script>
+  <!-- import JavaScript -->
+  <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+  <script>
+    new Vue({
+      el: '#app',
+      data: function() {
+        return { visible: false }
+      }
+    })
+	
+/*
+Attributes
+参数	说明	类型	可选值	默认值
+value	显示值	string, number	—	—
+max	最大值，超过最大值会显示 '{max}+'，要求 value 是 Number 类型	number	—	—
+is-dot	小圆点	boolean	—	false
+hidden	隐藏 badge	boolean	—	false
+type	类型	string	primary / success / warning / danger / info	—
+Pagination 分页 
+*/	
+  </script>
+</html>

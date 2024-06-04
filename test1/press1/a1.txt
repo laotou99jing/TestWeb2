@@ -1,0 +1,7 @@
+mkdir vitepress
+cd vitepress
+npm add -D vitepress
+npx vitepress init
+npm run docs:dev
+
+http://localhost:5173/test1/README.html
