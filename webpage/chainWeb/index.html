@@ -1,1 +1,39 @@
-123
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>chainTest1</title>
+</head>
+<style>
+	* {
+		margin: 0px;
+		padding: 0px;
+	}
+	
+	html {
+		background-color: black;
+	}
+</style>
+<script type="importmap">
+  {
+    "imports": {
+      "vue": "./vue.esm-browser.js",
+	  "vue3-sfc-loader": "./vue3-sfc-loader.esm.js",
+	  "vue-router": "./vue-router.esm-browser.js",
+	  "@vue/devtools-api":"https://www.unpkg.com/@vue/devtools-api@6.6.3/lib/esm/index.js",
+	  "vue/server-renderer": "https://play.vuejs.org/server-renderer.esm-browser.js"
+    }
+  }
+</script>
+<body>
+<div id="app">
+<router-view/>
+</div>
+</body>
+<script src="https://unpkg.com/crypto-js@4.2.0/crypto-js.js"></script>
+<script type="module" src="main.js">
+/*
+https://cdn.bootcdn.net/ajax/libs/crypto-js/4.1.1/crypto-js.js
+*/
+</script>
+</html>
