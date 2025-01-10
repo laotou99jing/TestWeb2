@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
+  <title>投资游戏</title>
+  <link rel="stylesheet" href="./css/index.css">
+<style>
+	body {
+		background-color: #fff;
+	}
+	
+	.size1 {
+		font-size: 11px;
+		color: blue;
+	}
+	
+	html body div#app {
+	  margin-left: 8px;
+	  margin-right: 8px;
+	} 
+	
+	.chiYouList {
+		color: black;
+	}
+</style>
+</head>
+<body>
+<div id="app">
+	
+	<van-cell-group>
+		<van-cell>
+			<van-col span="24">
+				<div align="center">
+					所有基金列表
+				</div>
+			</van-col>
+		</van-cell>
+		
+		<van-tabs v-model="active">
+			<van-tab title="全部显示">
+			<!--分组显示-->
+			<br>
+				<van-cell v-for="item in showAllJJList">
+					<van-row >
+						<van-col span="8" class="size1">基金名称</van-col>
+						<van-col span="8" class="size1">今日涨跌率</van-col>
+						<van-col span="8" class="size1">当前值</van-col>
+					</van-row>
+					<van-row >
+						<van-col span="8">{{ item.jjName }}</van-col>
+						<van-col span="8">{{ item.todayUDRate }}</van-col>
+						<van-col span="8">{{ item.curValue }}</van-col>
+					</van-row>
+					<van-row >
+						<van-col span="8" class="size1">是否持有</van-col>
+						<van-col span="8" class="size1">今日盈亏额</van-col>
+						<van-col span="8" class="size1">总盈亏额</van-col>
+					</van-row>
+					<van-row >
+						<van-col span="8">{{ item.isHad }}</van-col>
+						<van-col span="8">{{ item.todayUDValue }}</van-col>
+						<van-col span="8">{{ item.totalUDValue }}</van-col>
+					</van-row>
+				</van-cell>
+				<van-cell>
+					<van-row>
+						<br>
+						<br>
+					</van-row>
+				</van-cell>
+			</van-tab> 
+			<van-tab title="持有基金">持有基金
+				<div class="chiYouList">
+					<van-cell v-for="item1 in showAllCYList">
+						<van-row>
+							<van-col class="size1" span="8">基金名</van-col>
+							<van-col class="size1" span="8">份额</van-col>
+							<van-col class="size1" span="8">价格</van-col>
+						</van-row>
+						<van-row>
+							<van-col @click="toPage(item1.jjName)" span="8">{{ item1.jjName }}</van-col>
+							<van-col span="8">{{ item1.jjNum }}</van-col>
+							<van-col span="8">{{ item1.jjPrice }}</van-col>
+						</van-row>
+					</van-cell>
+					<van-cell>
+						<van-row>
+							<br>
+							<br>
+						</van-row>
+					</van-cell>
+				</div>
+			</van-tab> 
+		</van-tabs>
+	
+	</van-cell-group>
+	<van-tabbar v-model="subActive" @change="onChange">
+	  <van-tabbar-item icon="home-o">首页</van-tabbar-item>
+	  <van-tabbar-item icon="search">基金</van-tabbar-item>
+	  <van-tabbar-item icon="friends-o">买卖</van-tabbar-item>
+	  <van-tabbar-item icon="setting-o">消息</van-tabbar-item>
+	  <van-tabbar-item icon="manager-o">我的</van-tabbar-item>
+	</van-tabbar>
+</div>
+</body>
+
+<script src="./js/vue.min.js"></script>
+<script src="./js/vant.min.js"></script>
+<script src="./js/axios.min.js"></script>
+<script src="./js/pouchdb-8.0.1.min.js"></script>
+
+<script src="./utils.js"></script>
+
+<!--<script lang='js' setup type="module">-->
+<script type="text/javascript">
+	console.log("基金列表");
+
+	//import { Notify } from './js/vant.min.js';
+
+	new Vue({
+		el: '#app',
+		data() {
+			return {
+				aaa: 'abc',
+				active: 0,
+				subActive: 1,
+				jjList:[],
+				jjData:{},
+				utils: null,
+				showAllCYList:[
+					{
+						id: 0,
+						jjName: "测试ETF1",
+						jjNum: 100,
+						jjPrice: 1000,
+					}
+				],
+				showAllCYList1:[],
+				showAllJJList:[
+					{
+						id: 1,
+						jjName: '酒类ETF',
+						todayUDRate: '+1.1%',
+						curValue: '0.5555',
+						isHad: '否',
+						todayUDValue: '0',
+						totalUDValue: '0',						
+					},
+					{
+						id: 2,
+						jjName: '新能源ETF',
+						todayUDRate: '-1.2%',
+						curValue: '0.6666',
+						isHad: '否',
+						todayUDValue: '0',
+						totalUDValue: '0',						
+					},
+					{
+						id: 3,
+						jjName: '光伏ETF',
+						todayUDRate: '-0.6%',
+						curValue: '0.7777',
+						isHad: '否',
+						todayUDValue: '0',
+						totalUDValue: '0',						
+					},
+				],
+				showAllJJList1:[]
+			};
+		},
+		created: function(){
+			console.log('created');
+			vant.Toast('所有基金列表');
+			this.utils = new Utils();
+			this.initData();
+		},
+		methods: {
+			click1() {
+				window.location.href = "a2.html";
+			},
+			toPage(e){
+				console.log("toPage e-=>",e);
+			},
+			initData(){
+				console.log("initData()");
+				
+				//初始化数据
+				
+				//获取所有的基金数据
+				this.showAllJJList = this.utils.getAllJJList();		
+						
+				//获取已经购买的基金数据
+				this.showAllCYList = this.getAllBuyedList();
+				
+			},
+			getAllBuyedList(){//获取已经购买的基金
+				console.log("getAllBuyedList()");
+				let amount1 = 0;
+				let arr1 = []
+				//buyDic1:"{"酒类ETF":6652,"食品ETF":3542,"稀土ETF":5551}"
+				let tmpa1 = localStorage.getItem("buyDic1");
+				if (tmpa1 == null || tmpa1 == undefined || tmpa1 == '') {
+					return arr1;
+				} else {
+					let tmpa2 = JSON.parse(tmpa1)
+					//console.log("tmpa2-=>",tmpa2);
+					let tmpb3 = localStorage.getItem('buyHisList')
+					let tmpb4 = JSON.parse(tmpb3);
+					console.log("tmpb4-=>",tmpb4);					
+					/*Object.values(tmpa2).forEach(value => {
+					  console.log(value);
+					});*/
+					Object.keys(tmpa2).forEach(key => {
+					  console.log(`key-=>${key}: value-=>${tmpa2[key]}`);
+					  num1 = tmpa2[key];
+					  num2 = this.getPiceByName(key,tmpb4)
+					  price2 = this.getPriceByName(key,num2)
+					  amount1 += parseFloat(price2)
+					  let jo1 = {
+						  "jjName": key,
+						  "jjNum": num2,
+						  "jjPrice": price2
+					  }
+					  arr1.push(jo1)
+					});
+					console.log("arr1.length-=>",arr1.length);
+				}
+				
+				
+				
+				console.log("amount1-=>",amount1);
+				localStorage.setItem("amount",amount1)
+				return arr1;
+			},
+			getPiceByName(name,arr1){
+				console.log("name-=>",name);
+				let i1 = 0;
+				for(item1a of arr1){
+					console.log("item1a-=>",item1a);
+					if(item1a[''+name]){
+						let strA1 = item1a[''+name]
+						let arr2 = strA1.split(',')
+						console.log("arr2-=>",arr2);
+						i1 += parseFloat(arr2[2])
+					}
+				}
+				console.log("i1-=>",i1);
+				return i1.toFixed(2);
+			},
+			getPriceByName(name,num){
+				console.log("name,num-=>",name,num);
+				let price1 = 0;
+				this.showAllJJList.forEach(function(element) {
+					//console.log(`element-=>${element.jjName}`);
+					if(name == element.jjName) {
+						//console.log("element.curValue-=>",element.curValue);
+						let price2a = element.curValue * num
+						price1 = price2a.toFixed(2)
+					}
+				}, this);
+				
+				return price1;
+			},
+			onChange(index){
+				vant.Toast('提示:'+index);
+				//vant.Notify({type:'primary',message:index});
+				console.log("index-=>",index);
+				if(index===0){
+					window.location.href = 'gpIndex.html';
+				}else if(index===1){
+					window.location.href = 'alljjList.html';
+				}else if(index===2){
+					window.location.href = 'buySell.html';
+				}else if(index===3){
+					window.location.href = 'msgNotify.html';
+				}else if(index===4){
+					window.location.href = 'myInfo.html';
+				}
+			},
+		}
+	});
+/*
+
+var newArray = array.map(function(currentValue, index, array) {
+  // 返回你想要的新数组元素值
+}, thisArg);
+const newArray = array.map((currentValue, index, array) => {
+  // 返回你想要的新数组元素值
+});
+
+const obj = { a: 1, b: 2, c: 3 };
+
+Object.entries(obj).forEach(([key, value]) => {
+  console.log(`${key}: ${value}`);
+});
+
+const obj = { a: 1, b: 2, c: 3 };
+
+Object.values(obj).forEach(value => {
+  console.log(value);
+});
+
+const obj = { a: 1, b: 2, c: 3 };
+
+Object.keys(obj).forEach(key => {
+  console.log(`${key}: ${obj[key]}`);
+});
+
+const obj = { a: 1, b: 2, c: 3 };
+
+for (let key in obj) {
+  if (obj.hasOwnProperty(key)) {
+    console.log(`${key}: ${obj[key]}`);
+  }
+}
+//tmpa2.forEach(function(element) {
+	//console.log("element-=>",element);
+//}, this);
+//tmpa2.map(function(currentValue, index, array) {
+  // 返回你想要的新数组元素值
+  //console.log("currentValue-=>",currentValue);
+//});
+*/	
+</script>
+</html>

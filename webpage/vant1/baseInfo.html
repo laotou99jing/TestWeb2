@@ -1,0 +1,486 @@
+<!-- <h1>基金信息</h1> -->
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
+  <title>基金信息</title>
+  <link rel="stylesheet" href="./css/index.css">
+<style>
+	body {
+		background-color: #fff;
+	}
+	.size1 {
+		font-size: 11px;
+		color: blue;
+	}
+	html body div#app {
+	  margin-left: 8px;
+	  margin-right: 8px;
+
+	} 
+
+</style>
+</head>
+<body>
+<div id="app">
+<!--<br>
+	<br>
+	<br> -->
+	
+	<van-cell-group>
+		<van-cell>
+			<van-col span="24">
+				<!-- 
+				<div align="center">
+					基金名称：{{ title }}
+				</div>
+				-->
+			<van-nav-bar
+			  :title="title"
+			  left-text="返回"
+			  right-text="买卖"
+			  left-arrow
+			  @click-left="onClickLeft"
+			  @click-right="onClickRight"
+			/>
+
+			</van-col>
+			<van-col span="24">
+				<div align="center">
+					基金名称：{{ title }}
+				</div>
+			</van-col>
+		</van-cell>
+		<van-cell>
+			<van-col span="12">涨跌幅：{{ zhangDieFu }}</van-col>
+			<van-col span="12">今日净值:{{ todayVal1 }}</van-col>
+		</van-cell>
+	</van-cell-group>
+
+	<br>
+
+	<van-cell-group>
+		<van-cell>
+			<van-col span="24">
+				<div align="center">
+					十日数据
+				</div>
+			</van-col>			
+		</van-cell>
+		<van-cell>
+			<van-row>
+			  <van-col span="8">日期</van-col>
+			  <van-col span="8">净值</van-col>
+			  <van-col span="8">涨跌幅</van-col>
+			</van-row>
+			
+			<van-row v-for="item in shiRiShuJu2">
+			  <van-col span="8">{{ item.dateStr }}</van-col>
+			  <van-col span="8">{{ item.value1 }}</van-col>
+			  <van-col span="8">{{ item.rate1 }}</van-col>
+			</van-row>
+		</van-cell>
+	</van-cell-group>
+	<br>
+	<van-cell-group>
+		<van-cell>
+			<van-col span="24">
+				<div align="center">
+					月折线图
+				</div>
+			</van-col>			
+		</van-cell>
+	</van-cell-group>
+
+	<div id="echart1" style="width: auto;height:300px;"></div>
+
+</div>
+</body>
+<script src="./js/vue.min.js"></script>
+<script src="./js/vant.min.js"></script>
+<script src="./js/axios.min.js"></script>
+<script src="./js/echarts.js"></script>
+<script type="text/javascript">
+	console.log("基金详细");
+
+	new Vue({
+		el: '#app',
+		data() {
+			return {
+				abc:1,
+				title:'',
+				zhangDieFu:'',
+				todayVal1:'',
+				shiRiShuJu:[],
+				shiRiShuJu2:[
+					{
+						dateStr:'',
+						value1:0,
+						rate1:'1'						
+					},
+					{
+						dateStr:'',
+						value1:0,
+						rate1:'1'						
+					},
+					{
+						dateStr:'',
+						value1:0,
+						rate1:'1'						
+					}
+				],
+				tianShu:[],
+				dateStr:'',
+				value1:0,
+				rate1:'1',
+				idayNum: 30
+			};
+		},
+        created() {
+        	console.log('created()');
+        	this.title = sessionStorage.getItem("baseName1");
+			this.showData();
+        },
+        mounted() {
+        	console.log('mounted()');
+        	this.initData();
+        },
+        methods: {
+        	abc(){},
+			showData(){
+				console.log("showData()");
+				
+				//显示最新的净值
+				var tmpData1 = localStorage.getItem(this.title);
+				var tmpData2 = tmpData1.split(',');
+				var tmp2a = tmpData2.pop();
+				tmp2a = parseFloat(tmp2a).toFixed(4);
+				this.todayVal1 = tmp2a;
+				
+				var tmp3a = tmpData2.shift();
+				var tmp3c = tmp2a / tmp3a - 1;
+				tmp3c = tmp3c * 100;
+				tmp3c = parseFloat(tmp3c).toFixed(4);
+				//显示第一天起的涨跌率
+				this.zhangDieFu = tmp3c+'%';
+			},
+        	initData(){
+        		console.log("initData()");
+
+                var tmpData2 = localStorage.getItem(this.title);
+
+                //console.log("tmpData2-=>",tmpData2);
+
+                var tmpData3 = tmpData2.split(',');
+                console.log("tmpData3-=>",tmpData3);
+
+                //console.log("tmpData2-=>",JSON.stringify(tmpData2));
+                var i1a = 0;
+				this.shiRiShuJu2 = [];
+				var arr2s = [];
+				var tmpData4 = [];
+				tmpData3 = tmpData3.reverse();
+                for(tmp1a of tmpData3){
+					tmpData4.push(tmp1a);
+					i1a += 1;
+					if(i1a == this.idayNum){
+						break;
+					}
+				}
+				tmpData4 = tmpData4.reverse(); 
+				i1a = 0;
+                for(tmp1a of tmpData4){
+                	//console.log("tmp1a-=>",tmp1a);
+                	//this.shiRiShuJu.push(tmp1a.toFixed(2));
+                	this.shiRiShuJu.push(tmp1a);
+					arr2s.push(tmp1a);
+                	i1a += 1;
+                	this.tianShu.push(i1a);
+					/* var num5 = 0;
+					num5 = tmp1a;
+					num5 = parseFloat(num5).toFixed(4); 
+					if(i1a<11){
+						var obj1 = {};
+						obj1.dateStr = ''+i1a;
+						obj1.value1 = num5;
+						obj1.rate1 = '0%';
+						this.shiRiShuJu2.push(obj1);
+					}					*/
+                }
+                console.log("this.shiRiShuJu-=>",this.shiRiShuJu);
+				
+				arr2s.reverse();
+				i1a = 0;
+				var tmp1c_nextValue = 0;
+				let num3 = tmpData3.length;
+				console.log("num3-=>",num3);
+                for(tmp1b of arr2s){
+                	i1a += 1;
+					var num5 = 0;
+					var num6 = 0.0;
+					tmp1c_nextValue = arr2s[i1a];
+					num5 = tmp1b;
+					num5 = parseFloat(num5).toFixed(4);
+					if(i1a < 11){
+						num6 = (num5 / tmp1c_nextValue) - 1;
+						num6 = num6 * 100;
+						num6 = parseFloat(num6).toFixed(2);
+						var obj1 = {};
+						//obj1.dateStr = ''+i1a;
+						obj1.dateStr = '第'+num3+'天'
+						obj1.value1 = num5;
+						/*
+						if(i1a == 1){
+							obj1.rate1 = '0%';
+						}else{
+							obj1.rate1 = ''+num6 + '0%';
+						}
+						*/
+						obj1.rate1 = ''+num6 + '%';
+						this.shiRiShuJu2.push(obj1);
+						num3 -= 1;
+					}
+				}
+/*
+let arr = [1, 2, 3, 4, 5];
+arr.reverse(); // 将数组元素逆序排列
+console.log(arr); // 输出结果为[5, 4, 3, 2, 1]
+*/				
+        			/*
+        			var myChart = echarts.init(document.getElementById('echart1'));
+        		
+							var option = {
+								title: {
+								  text: 'ECharts 入门示例'
+								},
+								tooltip: {},
+								legend: {
+								  data: ['销量']
+								},
+								xAxis: {
+								  data: ['衬衫', '羊毛衫', '雪纺衫', '裤子', '高跟鞋', '袜子']
+								},
+								yAxis: {},
+								series: [
+								  {
+									name: '销量',
+									type: 'bar',
+									data: [5, 20, 36, 10, 10, 20]
+								  }
+								]
+							};
+
+						myChart.setOption(option); 
+						*/
+        			//this.drawChart2();
+        			this.drawBaseLine();
+        	},
+        	drawBaseLine(){
+        		console.log("drawBaseLine()");
+
+				var chartDom = document.getElementById('echart1');
+				var myChart = echarts.init(chartDom);
+				var option;
+				option = {
+				  legend:{},
+				  tooltip:{},
+				  xAxis: {
+					type: 'category',
+					data: this.tianShu
+				  },
+				  yAxis: {
+					type: 'value'
+				  },
+				  series: [
+					{
+					  data: this.shiRiShuJu,
+					  name: '月线',
+					  type: 'line'
+					}
+				  ]
+				};
+
+				option && myChart.setOption(option);
+
+        	},
+			drawChart2(){
+				console.log("drawChart2()");
+
+				var chartDom = document.getElementById('echart1');
+				var myChart = echarts.init(chartDom);
+				var option;
+
+				option = {
+				  title: {
+					text: '测试双均线'
+				  },
+				  tooltip: {
+					trigger: 'axis'
+				  },
+				  xAxis: {
+					type: 'category',
+					data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+				  },
+				  legend: {
+					data: ['aaa', 'bbb']
+				  },
+				  yAxis: {
+					type: 'value'
+				  },
+				  series: [
+					{
+					  name: 'bbb',
+					  data: [150, 230, 224, 218, 135, 147, 260],
+					  type: 'line',
+					  stack: 'Total'
+					},
+					{
+					  name: 'aaa',
+					  data: [111, 222, 333, 221, 121, 321, 212],
+					  type: 'line',
+					  stack: 'Total'
+					}
+				  ]
+				};
+
+				option && myChart.setOption(option);
+
+			},
+			onClickLeft() {
+			  //vant.Toast('返回');
+				history.back();
+			},
+			onClickRight() {
+			   //vant.Toast('按钮');
+			   
+			    sessionStorage.setItem("buyJJName1",this.title);
+				sessionStorage.setItem("curPrice",this.todayVal1);
+				window.location.href = "buySell.html";
+			}
+      	}
+    })
+/*
+sublime快捷键有：
+
+Ctrl+D 选中光标所占的文本，继续操作则会选中下一个相同的文本。
+
+Alt+F3 选中文本按下快捷键，即可一次性选择全部的相同文本进行同时编辑。
+
+Ctrl+L 选中整行，继续操作则继续选择下一行。
+
+Ctrl+Shift+L 在选中的每行行尾插入光标，即可同时编辑这些行。
+
+Ctrl+Shift+M 选择括号内的内容。
+
+Ctrl+M 光标移动至括号内结束或开始的位置。
+
+Ctrl+Enter 在下一行插入新行。
+
+Ctrl+Shift+Enter 在上一行插入新行。
+
+Ctrl+Shift+[ 折叠选中代码。
+
+Ctrl+Shift+] 展开选中代码。
+
+Ctrl+K+0 展开所有折叠代码。
+
+Ctrl+← 向左单位性地移动光标，快速移动光标。
+
+Ctrl+→ 向右单位性地移动光标，快速移动光标。
+
+shift+↑ 向上选中多行。
+
+shift+↓ 向下选中多行。
+
+Shift+← 向左选中文本。
+
+Shift+→ 向右选中文本。
+
+Ctrl+Shift+← 向左单位性地选中文本。
+
+Ctrl+Shift+→ 向右单位性地选中文本。
+
+Ctrl+Shift+↑ 将光标所在行和上一行代码互换。
+
+Ctrl+Shift+↓ 将光标所在行和下一行代码互换。
+
+Ctrl+Alt+↑ 向上添加多行光标，可同时编辑多行。
+
+Ctrl+Alt+↓ 向下添加多行光标，可同时编辑多行。
+
+Ctrl+J 合并选中的多行代码为一行。
+
+Ctrl+Shift+D 复制光标所在整行，插入到下一行。
+
+Tab 向右缩进。
+
+Shift+Tab 向左缩进。
+
+Ctrl+K+K 从光标处开始删除代码至行尾。
+
+Ctrl+Shift+K 删除整行。
+
+Ctrl+/ 注释单行。
+
+Ctrl+Shift+/ 注释多行。
+
+Ctrl+K+U 转换大写。
+
+Ctrl+K+L 转换小写。
+
+Ctrl+Z 撤销。
+
+Ctrl+Y 恢复撤销。
+
+Ctrl+F2 设置书签
+
+Ctrl+T 左右字母互换。
+
+F6 单词检测拼写。
+
+Ctrl+F 打开底部搜索框，查找关键字。
+
+Ctrl+shift+F 在文件夹内查找。
+
+Ctrl+P 打开搜索框。
+
+Ctrl+G 打开搜索框，自动带：，输入数字跳转到该行代码。
+
+Ctrl+R 打开搜索框，自动带@，输入关键字，查找文件中的函数名。
+
+Ctrl+： 打开搜索框，自动带#，输入关键字，查找文件中的变量名、属性名等。
+
+Ctrl+Shift+P 打开命令框。
+
+Esc 退出光标多行选择，退出搜索框，命令框等。
+
+Ctrl+Tab 按文件浏览过的顺序，切换当前窗口的标签页。
+
+Ctrl+PageDown 向左切换当前窗口的标签页。
+
+Ctrl+PageUp 向右切换当前窗口的标签页。
+
+Alt+Shift+1 窗口分屏。
+
+Alt+Shift+2 左右分屏-2列。
+
+Alt+Shift+3 左右分屏-3列。
+
+Alt+Shift+4 左右分屏-4列。
+
+Alt+Shift+5 等分4屏。
+
+Alt+Shift+8 垂直分屏-2屏。
+
+Alt+Shift+9 垂直分屏-3屏。
+
+Ctrl+K+B 开启/关闭侧边栏。
+
+F11 全屏模式。
+
+Shift+F11 免打扰模式。
+*/
+</script>
+</html>

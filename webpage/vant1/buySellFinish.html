@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
+  <title>投资游戏</title>
+  <link rel="stylesheet" href="./css/index.css">
+<style>
+	.title1 {
+		margin: 11px 10px 11px 10px;
+	}
+	.van-nav-bar { 
+	  background-color: #ffffff;
+	}
+	/* #55ffff; */
+	.van-nav-bar__title { 
+		color: #ff007f; 
+		font-size: 24px;
+	}
+	
+	.body1 {
+		color: black;
+	}
+	
+	.foot11 {
+		color: black;
+	}
+	
+	.van-cell {
+		color: #323233;
+		font-size: 20px;
+		line-height: 26px;
+	}
+</style>
+</head>
+<body>
+<div id="app">
+	<div class="title1">
+		<van-nav-bar
+			title="购买完成"
+			left-text=""
+			right-text="主页"
+			left-arrow
+			@click-left="onClickLeft"
+			@click-right="onClickRight"
+		/>
+	</div>
+	<div class="body1">
+		<van-cell-group inset>
+			<van-cell title="基金名" :value="stockName" />
+		</van-cell-group>
+		<van-cell-group></van-cell-group>
+		<van-cell-group inset>
+			<van-cell title="买入份额" :value="fenE" label="今日买入的不可当日卖出"/>
+		</van-cell-group>
+		<van-cell-group inset>
+			<van-cell value="点击跳转页面" />
+		</van-cell-group>
+		<van-cell-group inset>
+			<van-cell title="主页" is-link url="gpIndex.html" />
+		</van-cell-group>
+	</div>
+	<div class="foot11">
+		
+	</div>
+</div>
+</body>
+<script src="./js/vue.min.js"></script>
+<script src="./js/vant.min.js"></script>
+<script src="./js/axios.min.js"></script>
+<script src="./js/pouchdb-8.0.1.min.js"></script>
+<script src="./utils.js"></script>
+<script type="text/javascript">
+	console.log("buySellFinish.html");
+	
+	new Vue({
+		el: '#app',
+		data() {
+			return {
+				abc: 123,
+				num1: 0,
+				fenE: 0,
+				stockName: '基金名'
+			}
+		},
+		created(){
+			console.log("created()");
+			this.stockName = sessionStorage.getItem("buyJJName1");
+			console.log("this.stockName-=>",this.stockName)
+			
+			
+			this.num1 = sessionStorage.getItem("tmpCost");
+			console.log("this.num1-=>",this.num1);
+			
+			this.initData()
+		},
+		mounted(){
+			console.log("mounted()");
+		},
+		methods: {
+			abc(){
+				console.log("abc");
+				
+			},
+			initData(){
+				console.log("initData()");
+				
+				this.fenE = sessionStorage.getItem("fenE");
+			},
+			onClickLeft(){
+				console.log("onClickLeft");
+			},
+			onClickRight(){
+				console.log("onClickRight");
+				location.href = 'gpIndex.html'
+			}
+		}
+	})
+/**
+ * 
+ * 
+ * 
+*/	
+</script>
+</html>

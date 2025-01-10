@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
+  <title>投资游戏</title>
+  <link rel="stylesheet" href="./css/index.css">
+<style>
+	body {
+		background-color: #fff;
+	}
+	
+	.title1 {
+		background-color: #fff;
+		font-size: 22px;
+		margin-top: 22px;
+		margin-bottom: 22px;
+		margin-left: 10px;
+	}
+	.title2 {
+		background-color: #eee;
+		font-size: 16px;
+		margin-top: 22px;
+		margin-bottom: 22px;
+		margin-left: 10px;
+	}
+	
+	.price1 {
+		font-size: 20px;
+	}
+	
+	.van-field__label > span:nth-child(1) {
+		font-size: 20px;
+		border: 1px;
+		color: #0003d6;
+	}
+	
+	.minCost {
+		padding-left: 13px;
+		margin: auto;
+		color: #f9888a;
+	}
+	
+	.stockName {
+		display: block;
+	}
+</style>
+</head>
+<body>
+<div id="app">
+	
+	<van-cell-group>
+		<van-cell>
+			<van-row>
+				<div class="title1"align="center">
+					基金{{ aaa }}界面
+				</div>
+			</van-row>
+			<hr>
+			<van-row>
+				<div class="title2"align="center">
+				{{ stockName }}
+				</div>
+			</van-row>
+		</van-cell>
+		<van-cell>
+			<van-row>
+				
+			</van-row>
+		</van-cell>
+	
+	
+	</van-cell-group>
+	<van-cell-group>
+		<van-cell>
+			<van-cell title="当前价格" :value="curPrice" size="large" />			
+		</van-cell>
+		<van-cell>
+			<van-row>
+				您将以这个价格买入,当日买入不可卖出
+			</van-row>
+		</van-cell>
+		
+	</van-cell-group>
+	<van-cell-group>
+		<van-cell>
+		<van-form @submit="onSubmit">
+			<van-field v-model="buyCost" name="cost" type="digit" @blur="onchange1"
+				label="购买金额" placeholder="100" required> 
+			</van-field>
+			<van-row class="stockName">
+				<van-cell :title="stockName" :value="stockName" label="购买基金名" >
+				</van-cell>
+			</van-row>
+			<van-row>
+				<div class="minCost">最低买入金额: &nbsp; 10</div>
+			</van-row>
+			<van-row>&nbsp;</van-row>
+			<van-row>
+				<van-cell title="预估份额" :value="fenE"></van-field>
+			</van-row>
+			<van-row>&nbsp;</van-row>
+			<van-row>
+				<van-cell title="当前可用金额" :value="curCost" size="large" />	
+			</van-row>
+			<van-row>&nbsp;</van-row>
+			<div style="margin: 16px;">
+			  <van-button round block type="info" native-type="submit">
+				提交
+			  </van-button>
+			</div>
+		</van-form>
+		</van-cell>
+	</van-cell-group>
+	
+	
+	<van-tabbar v-model="subActive" @change="onChange">
+	  <van-tabbar-item icon="home-o">首页</van-tabbar-item>
+	  <van-tabbar-item icon="search">基金</van-tabbar-item>
+	  <van-tabbar-item icon="friends-o">买卖</van-tabbar-item>
+	  <van-tabbar-item icon="setting-o">消息</van-tabbar-item>
+	  <van-tabbar-item icon="setting-o">我的</van-tabbar-item>
+	</van-tabbar>
+</div>
+</body>
+
+<script src="./js/vue.min.js"></script>
+<script src="./js/vant.min.js"></script>
+<script src="./js/axios.min.js"></script>
+<script src="./js/pouchdb-8.0.1.min.js"></script>
+<script src="./utils.js"></script>
+<script type="text/javascript">
+	
+	new Vue({
+		el: '#app',
+		data() {
+			return {
+				aaa: '买',
+				fenE: 0,
+				buyCost: 0,
+				buyHistory: [],
+				curPrice: 0,
+				curCost: 0,
+				stockName:'基金名称',
+				active: 0,
+				subActive: 2,
+				tablActiove:0,
+				jjName:''
+			}
+		},
+		created(){
+			console.log("created()")
+			
+            this.jjName = sessionStorage.getItem("buyJJName1");
+			console.log("this.jjName-=>",this.jjName)
+			
+			this.curPrice = sessionStorage.getItem("curPrice");
+			console.log("this.curPrice-=>",this.curPrice)
+			this.stockName = this.jjName
+			
+			this.curCost = localStorage.getItem("lastCost");
+			console.log("this.curCost-=>",this.curCost);
+			
+			let tmpBH = localStorage.getItem("buyHistory");
+			if(tmpBH === null || tmpBH === undefined){}else{
+				this.buyHistory = JSON.parse(tmpBH);
+				console.log("this.buyHistory-=>",this.buyHistory);
+			}
+			
+		},
+		mounted(){
+			console.log("mounted()")
+			
+		},
+		methods:{
+			onChange(index){
+				vant.Toast('提示:'+index);
+				//vant.Notify({type:'primary',message:index});
+				console.log("index-=>",index);
+				if(index===0){
+					window.location.href = 'gpIndex.html';
+				}else if(index===1){
+					window.location.href = 'alljjList.html';
+				}else if(index===2){
+					window.location.href = 'buySell.html';
+				}else if(index===3){
+					window.location.href = 'msgNotify.html';
+				}else if(index===4){
+					window.location.href = 'myInfo.html';
+				}
+			},
+			onchange1(){
+				console.log("onchange1");
+				
+				console.log("this.buyCost-=>",this.buyCost);
+				if (this.buyCost < 10){
+					vant.Notify('买入金额不可小于10元')
+					return
+				}
+				
+				let tmpPrice3 = this.buyCost / this.curPrice
+				
+				console.log("tmpPrice3-=>",tmpPrice3);
+				
+				this.fenE = tmpPrice3.toFixed(2)
+			},
+			onSubmit(values) {
+				console.log('submit', values);
+				// { cost: "21213", stockName: "游戏动漫ETF" }
+				let tmpCost = values['cost'];
+				let tmpStockName = values['stockName'];
+				
+				if(tmpCost == 0 || tmpCost === null || tmpCost === undefined || tmpCost <= 0){
+					vant.Toast('购买金额不可为零')
+					return;
+				}
+				tmpStockName = this.stockName
+				this.savaToDB(tmpStockName,tmpCost)
+				console.log("fenE-=>",this.fenE);
+				sessionStorage.setItem("fenE",this.fenE);
+				sessionStorage.setItem("tmpCost",tmpCost)
+				
+				//减去现有的金额
+				//let curCost1 = this.curPrice * tmpCost
+				//let cost2 = this.curCost - curCost1
+				let cost2 = this.curCost - tmpCost
+				console.log("cost2-=>",cost2);
+				localStorage.setItem("lastCost",cost2);
+				
+				vant.Toast('购买成功')
+				window.location.href = 'buySellFinish.html';
+			},
+			savaToDB(name,cost){
+				name = this.stockName
+				console.log("savaToDB",name,cost);
+				
+				let bd1 = localStorage.getItem("buyDic1")
+				console.log("bd1-=>"+bd1);
+				if (bd1 == null || bd1 == undefined || bd1 == "" ){
+					console.log("no data");
+					//let bd2 = {name:cost}
+					let bd2 = {}
+					bd2[''+name] = cost;
+					console.log("bd2-=>",bd2);
+					localStorage.setItem("buyDic1",JSON.stringify(bd2))
+				}else{
+					console.log("had data");
+					let data1 = JSON.parse(bd1)
+					console.log('data1[name]-=>',data1[name]);
+					if (data1[name] == null || data1[name] == undefined) {
+						data1[''+name] = cost
+					}else{
+						let tmp1 = data1[name];
+						data1[''+name] = parseFloat(tmp1) + parseFloat(cost)
+					}
+					console.log("data1-=>",data1);
+					localStorage.setItem("buyDic1",JSON.stringify(data1))					
+				}
+				
+				//buyHisList
+				let bhl1 = localStorage.getItem("buyHisList")
+				if (bhl1 == null || bhl1 == undefined || bhl1 == '') {
+					console.log("no his data");
+					let arr1 = []
+					//let bba1 = {name: this.curPrice}
+					let bba1 = {}
+					bba1[''+name] = this.curPrice+','+cost+','+this.fenE
+					arr1.push(bba1)
+					localStorage.setItem("buyHisList",JSON.stringify(arr1))
+				} else {
+					console.log("had his data");
+					let arr2 = JSON.parse(bhl1)
+					//let bba2 = {name:this.curPrice}
+					let bba2 = {}
+					bba2[''+name] = this.curPrice+','+cost+','+this.fenE
+					arr2.push(bba2)
+					localStorage.setItem("buyHisList",JSON.stringify(arr2))
+				}
+				
+				
+				vant.Notify('存入数据库')
+			}
+		}
+	})
+
+/*
+
+array.forEach(element => console.log(element));
+
+
+
+
+
+基金买卖页面
++------------------------------------------+
+|
+|			基金买/卖界面
+|			——————————————
+|			  基金名称
+|------------------------------------------
+|
+|	输入（购买金额/卖出份额）
+|	+---------------------------------+
+|	|
+|	+---------------------------------+
+|
+|------------------------------------------
+|	《只卖出显示》
+|	可卖出份额					100份
+|
+|------------------------------------------
+|
+|	买入卖出规则
+|	买入手续费
+|	卖出手续费
+|
+|
+|
+|	+----------------------------------
+|	|			确定买入/卖出
+|	+----------------------------------
+|
+|
+|
++------------------------------------------+
+
+
+*/
+
+</script>
+</html>

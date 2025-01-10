@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
+    <title>a4 - echart demo</title>
+
+    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/vant/2.12.47/index.css">
+
+    <!-- 自定义样式 -->
+    <style>
+        body {
+            color: #333;
+            background-color: #f8f8f8;
+        }
+        
+        .mainBody {
+            padding-bottom: 50px
+        }
+    </style>
+</head>
+
+
+<body>
+    <div id="app">
+        <!-- 模板 -->
+        <!-- {{title}} -->
+        <div class="mainBody">
+            <div id="main" style="width: auto;height:300px;">
+            </div>
+        </div>
+
+    </div>
+    <script src="https://cdn.bootcdn.net/ajax/libs/vue/2.6.14/vue.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/vant/2.12.47/vant.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/echarts/5.3.2/echarts.js"></script>
+    <script type="text/javascript">
+        new Vue({
+            el: '#app',
+            data() {
+                return {
+                    title: '双均线测试',
+                    todays: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                    datas: [],
+					datasMA5: [],
+					datasMA20: [],
+					initPrice: 1.0,
+					numbers: [],
+                };
+            },
+            mounted() {
+                this.initData();
+                this.drawChart();
+            },
+			created() {
+				console.log("created");
+				this.one();
+			},
+            methods: {
+                abc() {
+                    console.log("abc");
+
+
+                },
+                initData() {
+                    console.log("initData");
+					var a1 = Math.random();
+					//console.log("a1",a1);
+					var price = this.initPrice;
+					
+                    for (i = 0; i < 100; i++) {
+                        //console.log(i);
+						var a1 = Math.random();
+						//console.log("a1-=>",a1);
+						var a3 = a1.toFixed(4)
+						//console.log("a3-=>",a3);
+						var a2 = a1 * 10;
+						//console.log("a2-=>",a2);						
+						
+						if(a2 >= 5){
+							//price = price + (a1/100).toFixed(4);
+							var a5 = Math.random();
+							var a4 = (Math.round(a5*10000)/1000000);
+							//console.log("a4-=>",a4);						
+							price = price + a4;
+						}else{
+							//price = price - (a1/100).toFixed(4);
+							//price = price + (a1/100).toFixed(4);
+							var a5a = Math.random();
+							var a4a = (Math.round(a5a*10000)/1000000);
+							//console.log("a4a-=>",a4a);				
+							price = price - a4a;
+						}
+						price = (Math.round(price*1000)/1000);
+						//console.log(price);
+						this.numbers.push(i);
+                        //this.datas.push(price*100);
+						this.datas.push(price)
+                    }
+
+                    //console.log(this.datas);
+					this.initMA5();
+					this.initMA20();
+                },
+                initMA5() {
+                    console.log("initMA5");
+					
+					var arrAVE = new Array();
+					
+					for(i1=0;i1<this.datas.length;i1++){
+						var aa1 = this.datas[i1];
+						//console.log(aa1);
+						if(i1<5){
+							this.datasMA5.push(null);
+							arrAVE.push(aa1);
+						}else{
+							var tmp1 = this.getAVEM5(arrAVE);
+							this.datasMA5.push(tmp1);
+							arrAVE.push(aa1);
+							arrAVE.shift();
+						}
+					}					
+					//console.log("datasMA5-=>",this.datasMA5);
+
+                },
+                initMA20() {
+                    console.log("initMA20");
+					
+					var arrAVE20 = new Array();
+					
+					for(i2 = 0; i2 < this.datas.length; i2++){
+						var aa2 = this.datas[i2];
+						if(i2 < 20){
+							this.datasMA20.push(null);
+							arrAVE20.push(aa2);
+						}else{
+							var tmp2 = this.getAVEM20(arrAVE20);
+							this.datasMA20.push(tmp2);
+							arrAVE20.push(aa2);
+							arrAVE20.shift();
+						}
+					}					
+					//console.log("datasMA20-=>",this.datasMA20);
+                },
+				getAVEM20(arr2a){
+					//console.log("arr2a-=>",arr2a);					
+					var sum2 = 0;
+					arr2a.forEach(function(e){
+						sum2 = sum2 + e;
+					
+					});
+					
+					var res2 = sum2 / (arr2a.length);					
+					res2 = (Math.round(res2*1000)/1000);					
+					return res2;
+				},
+				getAVEM5(arr1a){
+					//console.log("arr1a-=>",arr1a);
+					var sum1 = 0;
+					arr1a.forEach( function(e) {
+						//console.log(e);
+						sum1 = sum1 + e;
+					});
+					
+					var res1 = sum1 / (arr1a.length);					
+					res1 = (Math.round(res1*1000)/1000);
+					return res1;
+				},
+                one() {
+                    console.log("abc");
+					/*
+					var arr1 = new Array();
+					arr1.push("a1");
+					console.log(arr1);
+					arr1.push("a2");
+					console.log(arr1);
+					arr1.push("a3");
+					console.log(arr1);
+					
+					//arr1.pop();
+					//console.log(arr1);
+					
+					arr1.push("a4");
+					console.log(arr1);					
+					arr1.shift();
+					console.log(arr1);
+					*/
+					
+                },
+                drawChart() {
+
+
+                    var chartDom = document.getElementById('main');
+                    var myChart = echarts.init(chartDom);
+                    var option;
+
+                    option = {
+                        title: {
+                            text: '测试双均线'
+                        },
+                        tooltip: {
+                            trigger: 'axis'
+                        },
+                        xAxis: {
+                            type: 'category',
+                            data: this.numbers
+                        },
+                        legend: {
+                            data: ['估值', 'MA-5','MA-20']
+                        },
+                        yAxis: {
+                            type: 'value',
+							name: '净值',
+							min: 0.85,
+							max: 1.15,							
+                        },
+                        series: [
+							{
+								name: '估值',
+								//data: [150, 230, 224, 218, 135, 147, 260],
+								data: this.datas,
+								type: 'line',
+								showSymbol: false,
+								//stack: 'Total'
+							}, 
+							{
+								name: 'MA-5',
+								//data: [null, null, 1.1, 1.1, 1.1, 1.1, 1.1],
+								data: this.datasMA5,
+								type: 'line',
+								showSymbol: false,
+								//stack: 'Total'
+							},,
+							{
+								name: 'MA-20',
+								//data: [null, null, 1.1, 1.1, 1.1, 1.1, 1.1],
+								data: this.datasMA20,
+								type: 'line',
+								showSymbol: false,
+								//stack: 'Total'
+							},
+						]
+                    };
+
+                    option && myChart.setOption(option);
+
+
+                }
+            }
+        });
+		
+		function replaceDoc()
+		{
+			window.location.replace("./a4.html")
+		}
+		
+		setTimeout("replaceDoc()", 10000 );
+    </script>
+</body>
+
+</html>

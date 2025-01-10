@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
+  <title>a2-Vant CDN Demo</title>
+
+  <!-- 引入样式文件
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vant@2.2/lib/index.css">
+  
+  <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/vant/3.4.8/index.min.css">
+  -->
+  <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/vant/2.12.47/index.css">
+  
+  <!-- 自定义样式 -->
+  <style>
+  
+    body {
+      color: #333;
+      background-color: #f8f8f8;
+    }
+	
+	.mainBody {
+		padding-bottom: 50px
+	}
+  
+  </style>
+</head>
+
+
+<body>
+  <div id="app">
+    <!-- 模板 -->
+		
+		<div class="mainBody">
+			{{aaa}}
+			<div id="main" style="width: auto;height:300px;">
+			</div>
+		</div>
+		<ol>
+			<muban></muban>
+		</ol>
+		<div>
+			<img src="./a1.png">
+			{{ bbb }}
+		</div>
+		
+  </div>
+
+  <!-- 引入 Vue 和 Vant 的 JS 文件  
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vant@2.2/lib/vant.min.js"></script>
+  -->
+  <!-- 
+  <script src="https://cdn.bootcdn.net/ajax/libs/vue/2.6.14/vue.min.js"></script>
+  -->
+  <script src="https://cdn.bootcdn.net/ajax/libs/vue/2.6.14/vue.js"></script>
+  
+  <!--
+  <script src="https://cdn.bootcdn.net/ajax/libs/vant/3.4.8/vant.min.js"></script>
+  -->
+  <script src="https://cdn.bootcdn.net/ajax/libs/vant/2.12.47/vant.js"></script>
+  
+  <script src="https://cdn.bootcdn.net/ajax/libs/echarts/5.3.2/echarts.js"></script>
+  <script>
+
+	Vue.component('muban',{
+		template: '<li>模板2</li>'
+	})
+
+	new Vue({
+		el: '#app',
+		
+		data() {
+			return {
+				aaa: 'abc',
+				bbb: 'bbb',
+			};
+		},
+		mounted(){
+			this.drawChart2();
+		},
+		methods:{
+			drawChart(){
+			  
+				// 基于准备好的dom，初始化echarts实例
+				var myChart = echarts.init(document.getElementById('main'));
+				// 指定图表的配置项和数据
+				var option = {
+				title: {
+				  text: 'ECharts 入门示例'
+				},
+				tooltip: {},
+				legend: {
+				  data: ['销量']
+				},
+				xAxis: {
+				  data: ['衬衫', '羊毛衫', '雪纺衫', '裤子', '高跟鞋', '袜子']
+				},
+				yAxis: {},
+				series: [
+				  {
+					name: '销量',
+					type: 'bar',
+					data: [5, 20, 36, 10, 10, 20]
+				  }
+				]
+				};
+
+				// 使用刚指定的配置项和数据显示图表。
+				myChart.setOption(option); 
+			
+			},
+			drawChart2(){
+								
+				var chartDom = document.getElementById('main');
+				var myChart = echarts.init(chartDom);
+				var option;
+
+				option = {
+				  title: {
+					text: '测试双均线'
+				  },
+				  tooltip: {
+					trigger: 'axis'
+				  },
+				  xAxis: {
+					type: 'category',
+					data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+				  },
+				  legend: {
+					data: ['aaa', 'bbb']
+				  },
+				  yAxis: {
+					type: 'value'
+				  },
+				  series: [
+					{
+					  name: 'bbb',
+					  data: [150, 230, 224, 218, 135, 147, 260],
+					  type: 'line',
+					  stack: 'Total'
+					},
+					{
+					  name: 'aaa',
+					  data: [111, 222, 333, 221, 121, 321, 212],
+					  type: 'line',
+					  stack: 'Total'
+					}
+				  ]
+				};
+
+				option && myChart.setOption(option);
+				
+			}
+		}
+	});
+  
+  </script>
+</body>
+</html>

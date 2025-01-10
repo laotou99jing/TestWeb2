@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
+  <title>投资游戏</title>
+  <link rel="stylesheet" href="./css/index.css">
+<style>
+	body {
+		background-color: #fff;
+	}
+</style>
+</head>
+<body>
+<div id="app">
+	
+	<van-cell-group>
+		<van-cell>
+			<van-col span="24">
+				<div align="center">
+					消息通知
+				</div>
+			</van-col>
+		</van-cell>
+		<van-cell>
+			<van-row>
+				<br>
+			</van-row>
+			<van-row>
+				<van-col span="4">日期</van-col>
+				<van-col span="14">标题</van-col>
+				<van-col span="6">操作</van-col>			
+			</van-row>
+			<van-row v-for="item in showNotiyList">
+				<van-col span="4">{{ item.date1 }}</van-col>
+				<van-col span="14">{{ item.title }}</van-col>
+				<van-col span="6">点击详情</van-col>
+			</van-row>
+		</van-cell>
+		
+	</van-cell-group>
+	<van-tabbar v-model="subActive" @change="onChange">
+	  <van-tabbar-item icon="home-o">首页</van-tabbar-item>
+	  <van-tabbar-item icon="search">基金</van-tabbar-item>
+	  <van-tabbar-item icon="friends-o">买卖</van-tabbar-item>
+	  <van-tabbar-item icon="setting-o">消息</van-tabbar-item>
+	  <van-tabbar-item icon="setting-o">我的</van-tabbar-item>
+	</van-tabbar>
+</div>
+</body>
+
+<script src="./js/vue.min.js"></script>
+<script src="./js/vant.min.js"></script>
+<script src="./js/axios.min.js"></script>
+<script type="text/javascript">
+
+	new Vue({
+		el: '#app',
+		data() {
+			return {
+				aaa: 'abc',
+				active: 0,
+				subActive: 3,
+				showNotiyList: [
+					{
+						id: 1,
+						date1: '1月1日',
+						title: '今日涨跌提醒',
+						content:'今日涨跌提醒',
+					},
+					{
+						id: 2,
+						date1: '1月2日',
+						title: '今日涨跌提醒',
+						content:'今日涨跌提醒',
+					},
+					{
+						id: 3,
+						date1: '1月3日',
+						title: '今日涨跌提醒',
+						content:'今日涨跌提醒',
+					},
+				],
+			};
+		},
+		created: function(){
+			console.log('created');
+			vant.Toast('消息通知');
+		},
+		methods: {
+			click1() {
+				window.location.href = "a2.html";
+			},
+			onChange(index){
+				vant.Toast('提示:'+index);
+				//vant.Notify({type:'primary',message:index});
+				console.log("index-=>",index);
+				if(index===0){
+					window.location.href = 'gpIndex.html';
+				}else if(index===1){
+					window.location.href = 'alljjList.html';
+				}else if(index===2){
+					window.location.href = 'buySell.html';
+				}else if(index===3){
+					window.location.href = 'msgNotify.html';
+				}else if(index===4){
+					window.location.href = 'myInfo.html';
+				}
+			},
+		}
+	});
+
+</script>
+</html>

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
+  <title>aaa</title>
+  
+  <!-- 引入样式文件 
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vant@2.2/lib/index.css">
+  -->
+  <link rel="stylesheet" href="./css/index.css">
+<style>
+    body {
+      color: #333;
+      background-color: #f8f8f8;
+    }
+	
+    .goods {
+      padding-bottom: 50px;
+    }
+
+    .goods-swipe img {
+      width: 100%;
+      display: block;
+    }
+
+    .goods-title {
+      font-size: 16px;
+    }
+
+    .goods-price {
+      color: #f44;
+    }
+
+    .goods-express {
+      font-size: 12px;
+      padding: 5px 15px;
+    }
+
+    .goods-cell-group {
+      margin: 15px 0;
+    }
+
+    .goods-tag {
+      margin-left: 5px;
+    }
+	
+	.btnClass {
+		width: 95%;
+		margin: 15px 10px;
+	}
+
+</style>
+</head>
+
+<body>
+	<div id="app">
+		<div class="goods">
+			<van-cell-group>
+				<van-cell>
+					123
+				</van-cell>
+			  <van-cell :title="aaa" value="内容"></van-cell>
+			  <!-- abc -->
+			  <van-cell title="单元格" value="内容" label="描述信息">
+			  </van-cell>
+			</van-cell-group>
+			<van-button class="btnClass" type="primary" @click="click1" >
+				主要按钮1
+			</van-button>
+			<van-button class="btnClass" type="primary" @click="click2" >
+				主要按钮2
+			</van-button>
+			<a href="a2.html">a2</a>
+		</div>
+	</div>
+	
+  <!-- 引入 Vue 和 Vant 的 JS 文件 -->
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vant@2.2/lib/vant.min.js"></script>
+  <script src="https://cdn.bootcdn.net/ajax/libs/axios/1.3.4/axios.js"></script>
+  <script setup>
+	
+	// type="module"
+	//import { Button } from 'vant';
+	//window.location.href=""
+	
+	
+	new Vue({
+		el: '#app',
+		
+		data() {
+			return {
+				aaa: 'abc',
+			};
+		},
+		methods: {
+			click1() {
+				//window.location.href = "a2.html";
+				console.log("click1()");
+				
+				axios.get('./abc.txt')
+					.then(function(res){
+						console.log('res-=>',res);
+						console.log('data-=>',res.data);
+						
+					})
+					.catch(function(err){
+						console.log('err-=>',err);
+					});
+				
+			},
+			click2() {
+				console.log("click2()");
+			
+			},
+		}
+	});
+  </script>
+</body>
+</html>

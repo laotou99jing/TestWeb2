@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
+  <title>投资游戏</title>
+  <link rel="stylesheet" href="./css/index.css">
+<style>
+	body {
+		background-color: #fff;
+	}
+</style>
+</head>
+<body>
+<div id="app">
+
+</div>
+</body>
+
+<script src="./js/vue.min.js"></script>
+<script src="./js/vant.min.js"></script>
+<script src="./js/axios.min.js"></script>
+<script src="./js/pouchdb-8.0.1.min.js"></script>
+<script type="text/javascript">
+	var db = new PouchDB('my_database');
+
+
+	db.put({
+	  _id: 'mydoc',
+	  title: 'Heroes'
+	}, function(err, response) {
+	  if (err) { return console.log(err); }
+	  // handle response
+	});
+
+	
+
+	db.get('mydoc', function(err, doc) {
+	  if (err) { return console.log(err); }
+	  // handle doc
+	  console.log(doc);
+	});
+
+
+	
+
+	db.get('mydoc', function(err, doc) {
+	  if (err) { return console.log(err); }
+	  db.put({
+		_id: 'mydoc',
+		_rev: doc._rev,
+		title: "Let's Dance"
+	  }, function(err, response) {
+		if (err) { return console.log(err); }
+		// handle response
+	  });
+	});
+
+	
+	db.get('mydoc', function(err, doc) {
+	  if (err) { return console.log(err); }
+	  // handle doc
+	  console.log(doc);
+	});
+
+	db.post({
+	  title: 'Ziggy Stardust'
+	}, function (err, response) {
+	  if (err) { return console.log(err); }
+	  // handle response
+	});
+
+
+	db.get('mydoc', function(err, doc) {
+	  if (err) { return console.log(err); }
+	  // handle doc
+	  console.log(doc);
+	});
+
+</script>
+</html>
