@@ -8,17 +8,19 @@
   <title>基金信息</title>
   <link rel="stylesheet" href="./css/index.css">
 <style>
+	
 	body {
 		background-color: #fff;
 	}
+	
 	.size1 {
 		font-size: 11px;
 		color: blue;
 	}
+	
 	html body div#app {
-	  margin-left: 8px;
-	  margin-right: 8px;
-
+		margin-left: 8px;
+		margin-right: 8px;
 	} 
 
 </style>
@@ -114,6 +116,8 @@
 				zhangDieFu:'',
 				todayVal1:'',
 				shiRiShuJu:[],
+				wuRiShuJu:[],
+				erShiRiShuJu:[],
 				shiRiShuJu2:[
 					{
 						dateStr:'',
@@ -146,6 +150,9 @@
         mounted() {
         	console.log('mounted()');
         	this.initData();
+        	this.initMA5();
+        	this.initMA20();
+			this.drawBaseLine();
         },
         methods: {
         	abc(){},
@@ -166,6 +173,105 @@
 				//显示第一天起的涨跌率
 				this.zhangDieFu = tmp3c+'%';
 			},
+			initMA5(){
+				console.log("initMA5()");
+                let tmpData2 = localStorage.getItem(this.title);
+                let tmpData3 = tmpData2.split(',');
+				console.log("tmpData3.length-=>",tmpData3.length);
+				this.wuRiShuJu = []
+				let tmp1Arr1 = [];
+				let i1 = 0;
+				let arr1a = []
+				for(tmp1a of tmpData3) {
+					arr1a.push(tmp1a)
+					if (i1>4) {
+						let ma5a = this.getMA5D(arr1a)
+						tmp1Arr1.push(ma5a)
+						let aa1 = arr1a.shift()
+						console.log("aa1-=>",aa1);
+					}else{
+						tmp1Arr1.push(parseFloat(tmp1a))
+					}
+					i1 += 1;
+				}
+				console.log("tmp1Arr1-=>",tmp1Arr1);
+				
+				let tmp2Arr2 = tmp1Arr1.reverse(); 
+				let tmp2Arr3 = [];
+				let i1a = 0;
+				for(tmp2a of tmp2Arr2) {
+					tmp2Arr3.push(tmp2a)
+					i1a += 1;
+					if(i1a == this.idayNum){
+						break;
+					}
+				}
+				let tmp2Arr4 = tmp2Arr3.reverse();
+				console.log("tmp2Arr4-=>",tmp2Arr4);
+				this.wuRiShuJu = tmp2Arr4;
+			},
+			getMA5D(e){
+				console.log("getMA5D e-=>",e);
+				let num1 = 6
+				console.log("num1-=>",num1);
+				let num2 = 0
+				for (item1 of e) {
+					num2 += parseFloat(item1)
+				}
+				let num3 = num2 / num1
+				console.log("num3-=>",num3);
+				return num3
+			},
+			initMA20(){
+				console.log("initMA20()");
+                let tmpData2 = localStorage.getItem(this.title);
+                let tmpData3 = tmpData2.split(',');
+				console.log("tmpData3.length-=>",tmpData3.length);
+				this.erShiRiShuJu = []
+				let tmp1Arr1 = [];
+				let i1 = 0;
+				let arr1a = []
+				for(tmp1a of tmpData3) {
+					arr1a.push(tmp1a)
+					if (i1>19) {
+						let ma5a = this.getMA20D(arr1a)
+						tmp1Arr1.push(ma5a)
+						let aa1 = arr1a.shift()
+						console.log("aa1-=>",aa1);
+					}else{
+						tmp1Arr1.push(parseFloat(tmp1a))
+					}
+					i1 += 1;
+				}
+				console.log("tmp1Arr1-=>",tmp1Arr1);
+				
+				let tmp2Arr2 = tmp1Arr1.reverse(); 
+				let tmp2Arr3 = [];
+				let i1a = 0;
+				for(tmp2a of tmp2Arr2) {
+					tmp2Arr3.push(tmp2a)
+					i1a += 1;
+					if(i1a == this.idayNum){
+						break;
+					}
+				}
+				let tmp2Arr4 = tmp2Arr3.reverse();
+				console.log("tmp2Arr4-=>",tmp2Arr4);
+				this.erShiRiShuJu = tmp2Arr4;
+				
+			},
+			getMA20D(e){
+				console.log("getMA20D e-=>",e);
+				let num1 = 20
+				console.log("num1-=>",num1);
+				let num2 = 0
+				for (item1 of e) {
+					num2 += parseFloat(item1)
+				}
+				let num3 = num2 / num1
+				console.log("num3-=>",num3);
+				return num3
+			},
         	initData(){
         		console.log("initData()");
 
@@ -174,7 +280,7 @@
                 //console.log("tmpData2-=>",tmpData2);
 
                 var tmpData3 = tmpData2.split(',');
-                console.log("tmpData3-=>",tmpData3);
+                //console.log("tmpData3-=>",tmpData3);
 
                 //console.log("tmpData2-=>",JSON.stringify(tmpData2));
                 var i1a = 0;
@@ -209,7 +315,7 @@
 						this.shiRiShuJu2.push(obj1);
 					}					*/
                 }
-                console.log("this.shiRiShuJu-=>",this.shiRiShuJu);
+                //console.log("this.shiRiShuJu-=>",this.shiRiShuJu);
 				
 				arr2s.reverse();
 				i1a = 0;
@@ -248,6 +354,7 @@ let arr = [1, 2, 3, 4, 5];
 arr.reverse(); // 将数组元素逆序排列
 console.log(arr); // 输出结果为[5, 4, 3, 2, 1]
 */				
+				
         			/*
         			var myChart = echarts.init(document.getElementById('echart1'));
         		
@@ -275,7 +382,6 @@ console.log(arr); // 输出结果为[5, 4, 3, 2, 1]
 						myChart.setOption(option); 
 						*/
         			//this.drawChart2();
-        			this.drawBaseLine();
         	},
         	drawBaseLine(){
         		console.log("drawBaseLine()");
@@ -284,8 +390,15 @@ console.log(arr); // 输出结果为[5, 4, 3, 2, 1]
 				var myChart = echarts.init(chartDom);
 				var option;
 				option = {
-				  legend:{},
-				  tooltip:{},
+				  legend:{
+					//data: ['估值', 'MA-5','MA-20']
+				  },
+				  title: {
+					text: '双均线'
+				  },
+				  tooltip:{
+					trigger: 'axis'
+				  },
 				  xAxis: {
 					type: 'category',
 					data: this.tianShu
@@ -296,7 +409,17 @@ console.log(arr); // 输出结果为[5, 4, 3, 2, 1]
 				  series: [
 					{
 					  data: this.shiRiShuJu,
-					  name: '月线',
+					  name: '日线',
+					  type: 'line'
+					},
+					{
+					  data: this.wuRiShuJu,
+					  name: '5日线',
+					  type: 'line'
+					},
+					{
+					  data: this.erShiRiShuJu,
+					  name: '20日线',
 					  type: 'line'
 					}
 				  ]

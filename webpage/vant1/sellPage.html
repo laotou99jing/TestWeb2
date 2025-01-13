@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
+		<title>投资游戏</title>
+		<link rel="stylesheet" href="./css/index.css">
+	<style>
+		body {
+			color: black;
+		}
+		
+		.title1 {
+			color: black;
+			margin: 10px;
+		}
+		
+		.line1 {
+			color: black;
+			margin: 10px;			
+		}
+		
+		.van-nav-bar__title {
+			max-width: 60%;
+			margin: 0 auto;
+			color: #0000ff;
+			font-weight: 500;
+			font-size: 22px;
+			font-style: inherit;
+			font-family: initial;
+		}
+		
+		.sName {
+			color: black;
+		}
+		
+		.title2 {
+			background-color: #eee;
+			font-size: 16px;
+			margin-top: 22px;
+			margin-bottom: 22px;
+			margin-left: 10px;
+		}
+		
+		.inputField1 {
+			font-size: 22px;
+		}
+	</style>
+	</head>
+	<body>
+		<div id="app">
+			<van-cell-group>
+				<div class="title1">
+					<van-nav-bar
+					  title="基金卖出界面"
+					  left-text="返回"
+					  left-arrow
+					  @click-left="onClickLeft"
+					/>
+				</div>
+			</van-cell-group>
+			<br>
+			
+			<van-cell-group>
+				<div class="line1">
+					<hr>
+					<van-cell>
+						<van-row>
+							<div class="title2" align="center">
+								{{ stockName }}
+							</div>
+						</van-row>
+					</van-cell>
+					<van-cell>
+						<van-row>
+							
+						</van-row>
+					</van-cell>
+				</div> 
+			</van-cell-group>
+			
+			<van-cell-group>
+				<van-cell>
+					<van-cell title="持有份额" :value="chiYouFenE" 
+						size="large" label="显示为可以卖出的份额" />
+				</van-cell>
+				<van-cell>
+					<van-row>
+						请输入需要卖出的份额
+					</van-row>
+				</van-cell>
+			</van-cell-group>
+			
+			<van-cell-group>
+				<van-cell>
+					<van-field v-model="pices1" 
+						name="pices" 
+						type="digit" 
+						@blur="onchange2" 
+						class="inputField1" 
+						label="卖出份额数" 
+						placeholder="0" 
+						required
+					>
+					</van-field>
+				</van-cell>
+			</van-cell-group>
+			
+			<van-cell-group>
+				<van-cell>
+					<van-cell title="预估可获得金额" 
+						:value="getCost" size="large"/>
+				</van-cell>
+			</van-cell-group>
+			<van-cell-group>
+				<van-cell><br></van-cell>
+			</van-cell-group>
+			<van-cell-group>
+				<van-cell><br></van-cell>
+			</van-cell-group>
+			
+			<van-cell-group>
+				<div class="button1">
+					<van-button round block type="info" 
+						native-type="submit" @click="toSubmit">
+						提交
+					</van-button>
+				</div>
+			</van-cell-group>
+			
+			
+			<van-tabbar v-model="subActive" @change="onChange">
+			  <van-tabbar-item icon="home-o">首页</van-tabbar-item>
+			  <van-tabbar-item icon="search">基金</van-tabbar-item>
+			  <van-tabbar-item icon="friends-o">买卖</van-tabbar-item>
+			  <van-tabbar-item icon="setting-o">消息</van-tabbar-item>
+			  <van-tabbar-item icon="setting-o">我的</van-tabbar-item>
+			</van-tabbar>
+		</div>
+	</body>
+
+<script src="./js/vue.min.js"></script>
+<script src="./js/vant.min.js"></script>
+<script src="./js/axios.min.js"></script>
+<script src="./js/pouchdb-8.0.1.min.js"></script>
+<script src="./utils.js"></script>
+<script type="text/javascript">
+	
+	new Vue({
+		el:'#app',
+		data(){
+			return{
+				msg:'abc',
+				pices1: 0,
+				getCost: 0,
+				stockName: '某某ETF',
+				chiYouFenE: 100,
+				jjCost1: 0,
+				subActive: 2,
+			}
+		},
+		created(){
+			console.log("created()");
+			
+			this.stockName = sessionStorage.getItem("buyJJName1")
+			this.chiYouFenE = sessionStorage.getItem("chiYouFE")
+			//curPrice:"3.2903"
+			this.jjCost1 = sessionStorage.getItem("curPrice")
+		},
+		mounted(){
+			console.log("mounted()")
+			
+		},
+		methods:{
+			abc(){},
+			toSubmit(){
+				console.log("this.pices1-=>",this.pices1);
+				console.log("this.getCost-=>",this.getCost);
+				
+				if(this.pices1 == 0 || this.getCost == 0){
+					vant.Toast('不可为空')
+					return;
+				}
+				
+				this.saveToDB(this.pices1,this.getCost)
+				
+				sessionStorage.setItem("sellFenE",this.pices1)
+				sessionStorage.setItem("sellJinE",this.getCost)
+				
+				let cost1 = localStorage.getItem("lastCost");
+				let cost2 = parseFloat(cost1) + parseFloat(this.getCost)
+				console.log("cost2-=>",cost2);
+				localStorage.setItem("lastCost",cost2);
+				
+				vant.Toast('卖出成功')
+				window.location.href = "sellFinish.html"
+			},
+			saveToDB(num,cost){
+				console.log("num-=>",num);
+				console.log("cost-=>",cost);
+				
+				let name1 = this.stockName
+				
+				let bd1 = localStorage.getItem("buyDic1")
+				let bd2 = localStorage.getItem("buyDic2")
+				console.log("bd1-=>"+bd1);
+				console.log("bd2-=>"+bd2);
+				if (bd1 == null || bd1 == undefined || bd1 == "") {}else{
+					let data1 = JSON.parse(bd1)
+					console.log("1.data1-=>",data1);
+					console.log("data1[name1]-=>",name1,data1[''+name1]);
+					let cost2 = data1[''+name1]
+					let cost2a = parseFloat(cost2) - parseFloat(cost)
+					data1[''+name1] = cost2a
+					console.log("2.data1-=>",data1);
+					localStorage.setItem('buyDic1',JSON.stringify(data1))
+				}
+				
+				if (bd2 == null || bd2 == undefined || bd2 == "") {}else{
+					let data2 = JSON.parse(bd2)
+					console.log("1,data2-=>",data2);
+					console.log("data2[name1]-=>",name1,data2[''+name1]);
+					let pices2 = data2[''+name1]
+					let pices2a = parseFloat(pices2) - parseFloat(num)
+					data2[''+name1] = pices2a.toFixed(2)
+					console.log("2.data2-=>",data2);
+					localStorage.setItem('buyDic2',JSON.stringify(data2)) 
+				}
+				
+				//history {酒类ETF: '1.3545,1230,908.08'}
+				//{酒类ETF: '-220,390.02,1753.91'}
+				let bhl1 = localStorage.getItem("buyHisList")
+				if (bhl1 == null || bhl1 == undefined ||bhl1 == ''){}else{
+					let arr2a = JSON.parse(bhl1)
+					let bbb2 = {}
+					bbb2[''+name1] = this.jjCost1+",-"+cost+",-"+num
+					arr2a.push(bbb2)
+					console.log("arr2a-=>",arr2a);
+					localStorage.setItem("buyHisList",JSON.stringify(arr2a))
+				}
+				
+			},
+			onchange2(e){
+				//console.log("onchange2-=>",e);
+				console.log("pices1-=>",this.pices1);
+				console.log("this.chiYouFenE-=>",this.chiYouFenE);
+				if (parseFloat(this.pices1) > parseFloat(this.chiYouFenE)) {
+					vant.Toast('卖出份额不能大于持有份额')
+					return;
+				}
+				
+				let getCost3 = this.pices1 * this.jjCost1
+				console.log("getCost3-=>",getCost3);
+				this.getCost = getCost3.toFixed(2)
+			},
+			onChange(index){
+				vant.Toast('提示:'+index);
+				//vant.Notify({type:'primary',message:index});
+				console.log("index-=>",index);
+				if(index===0){
+					window.location.href = 'gpIndex.html';
+				}else if(index===1){
+					window.location.href = 'alljjList.html';
+				}else if(index===2){
+					window.location.href = 'buySell.html';
+				}else if(index===3){
+					window.location.href = 'msgNotify.html';
+				}else if(index===4){
+					window.location.href = 'myInfo.html';
+				}
+			},
+			onClickLeft(){}
+		}
+	})
+
+
+
+</script>
+</html>

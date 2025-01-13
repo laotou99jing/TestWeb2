@@ -324,11 +324,11 @@ JSON.parse
 			gpList1 = curData;
 			
 			 for (let tmp1 of gpList1) {
-            //			console.log("tmp1-=>",JSON.stringify(tmp1));
+            //console.log("tmp1-=>",JSON.stringify(tmp1));
             var curPrice = tmp1.todayPrice
             var firstPrices = [];
             for (i1 = 0; i1 <= iDay; i1++) {
-                //				console.log("i1-=>",tmp1.jjName+':'+i1);
+                //console.log("i1-=>",tmp1.jjName+':'+i1);
                 //debugger;
                 //console.log("curPrice-=>",curPrice);
                 var price = this.getStockPrice(curPrice);
@@ -513,8 +513,8 @@ JSON.parse
 			
 			var ve1 = tmp1a.pop();
 			var ve2 = tmp1a.pop();
-			console.log("ve1-=>",ve1);
-			console.log("ve2-=>",ve2);
+			//console.log("ve1-=>",ve1);
+			//console.log("ve2-=>",ve2);
 			if(ve1>=ve2){
 				upNum1 += 1;
 			}else{

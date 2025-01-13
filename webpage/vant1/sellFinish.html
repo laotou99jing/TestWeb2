@@ -7,18 +7,14 @@
   <title>投资游戏</title>
   <link rel="stylesheet" href="./css/index.css">
 <style>
+	body {
+		background-color: #fff;
+	}
+	
 	.title1 {
 		margin: 11px 10px 11px 10px;
 	}
-	.van-nav-bar { 
-	  background-color: #ffffff;
-	}
-	/* #55ffff; */
-	.van-nav-bar__title { 
-		color: #ff007f; 
-		font-size: 24px;
-	}
-	
+		
 	.body1 {
 		color: black;
 	}
@@ -26,34 +22,27 @@
 	.foot11 {
 		color: black;
 	}
-	
-	.van-cell {
-		color: #323233;
-		font-size: 20px;
-		line-height: 26px;
-	}
 </style>
 </head>
 <body>
 <div id="app">
 	<div class="title1">
-		<van-nav-bar
-			title="购买完成"
-			left-text=""
+		<van-nav-bar 
+			title="卖出完成"
 			right-text="主页"
-			left-arrow
-			@click-left="onClickLeft"
 			@click-right="onClickRight"
 		/>
 	</div>
 	<div class="body1">
 		<van-cell-group inset>
-			<van-cell title="基金名" :value="stockName" />
+			<van-cell title="基金名称" :value="sName" />
 		</van-cell-group>
 		<van-cell-group></van-cell-group>
 		<van-cell-group inset>
-			<van-cell title="买入份额" :value="fenE" 
-				label="今日买入的不可当日卖出"/>
+			<van-cell title="卖出份额" :value="fenE" />
+		</van-cell-group>
+		<van-cell-group inset>
+			<van-cell title="获得金额" :value="jinE" />
 		</van-cell-group>
 		<van-cell-group inset>
 			<van-cell value="点击跳转页面" />
@@ -67,61 +56,41 @@
 	</div>
 </div>
 </body>
+
 <script src="./js/vue.min.js"></script>
 <script src="./js/vant.min.js"></script>
 <script src="./js/axios.min.js"></script>
-<script src="./js/pouchdb-8.0.1.min.js"></script>
-<script src="./utils.js"></script>
 <script type="text/javascript">
-	console.log("buySellFinish.html");
-	
+
 	new Vue({
-		el: '#app',
-		data() {
-			return {
-				abc: 123,
-				num1: 0,
+		el:'#app',
+		data(){
+			return{
+				msg:'abc',
 				fenE: 0,
-				stockName: '基金名'
+				jinE: 0,
+				sName: ''
 			}
 		},
 		created(){
 			console.log("created()");
-			this.stockName = sessionStorage.getItem("buyJJName1");
-			console.log("this.stockName-=>",this.stockName)
+			this.sName = sessionStorage.getItem("buyJJName1");
+			console.log("this.sName-=>",this.sName)
 			
+			this.fenE = sessionStorage.getItem("sellFenE");
+			this.jinE = sessionStorage.getItem("sellJinE");
 			
-			this.num1 = sessionStorage.getItem("tmpCost");
-			console.log("this.num1-=>",this.num1);
-			
-			this.initData()
 		},
 		mounted(){
-			console.log("mounted()");
+			
 		},
-		methods: {
-			abc(){
-				console.log("abc");
-				
-			},
-			initData(){
-				console.log("initData()");
-				
-				this.fenE = sessionStorage.getItem("fenE");
-			},
-			onClickLeft(){
-				console.log("onClickLeft");
-			},
+		methods:{
+			abc(){},
 			onClickRight(){
-				console.log("onClickRight");
-				location.href = 'gpIndex.html'
+				window.location.href="./gpIndex.html"
 			}
 		}
 	})
-/**
- * 
- * 
- * 
-*/	
+
 </script>
 </html>

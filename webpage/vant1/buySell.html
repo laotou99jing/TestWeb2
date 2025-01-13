@@ -263,8 +263,6 @@
 				//显示昨日收益，持有收益，持有收益率
 				this.showZRCYlv();
 				
-				//显示持有金额，持有份额，
-				this.showAcountNumber();
 				
 				//显示待确认金额，持仓成本价
 				this.showQueRenJinEAndChengBen();
@@ -285,6 +283,8 @@
 				
 				//显示持仓成本
 				this.showChiCangChengBen();
+				//显示持有金额，持有份额，
+				this.showAcountNumber();
 				
 				
 			},
@@ -296,6 +296,12 @@
 			},
 			goToBuySellPage(e){ //打开买卖页面
 				console.log("goToBuySellPage()",e);
+				
+				if(e=='S'){
+					sessionStorage.setItem("chiYouFE",this.chiYouFenE)
+					location.href = './sellPage.html'
+					return
+				}
 				
 				location.href = './buySellPage.html';
 			},
@@ -322,6 +328,7 @@
 				console.log("bhl1-=>",bhl1);
 				if (bhl1 == null || bhl1 == undefined || bhl1 == '') {
 					this.chiCangChengBen = 0
+					this.chiYouFenE = 0;
 				}else{
 					let arrA1 = JSON.parse(bhl1)
 					console.log("arrA1-=>",arrA1);
@@ -331,27 +338,43 @@
 					})*/
 					let numDSFA2 = 0
 					let numJKLH3 = 0
+					let cyfe1 = 0
 					for(let item1a of arrA1) {
 						//console.log("item1a-=>",item1a);
 						if(item1a[''+this.jjName]){
 							console.log("item1a-=>",item1a);
 							let strAADF1 = item1a[''+this.jjName]
 							let arrJLJ2 = strAADF1.split(',')
-							console.log(arrJLJ2[0]);
-							console.log(arrJLJ2[1]);
+							//console.log(arrJLJ2[0]);
+							//console.log(arrJLJ2[1]);
+							/**/
+							cyfe1 += parseFloat(arrJLJ2[2])
+							if( parseFloat(arrJLJ2[1]) < 0 ){ 
+								continue
+							}
 							let numADFA2 = arrJLJ2[0] * arrJLJ2[1]
 							numDSFA2 += parseInt(arrJLJ2[1])
-							numJKLH3 += parseFloat(numADFA2)
+							numJKLH3 += parseFloat(numADFA2) 
 						}
 					}
 					console.log("numDSFA2-=>",numDSFA2);
 					console.log("numJKLH3-=>",numJKLH3);
+					console.log("cyfe1-=>",cyfe1);
 					let num3a = numJKLH3 / numDSFA2
 					console.log("num3a-=>",num3a);
 					let num4a = num3a.toFixed(4)
 					this.chiCangChengBen = num4a
+					
+					this.chiYouFenE = cyfe1.toFixed(2);
 				}
-				
+/*
+当前 份额 花费
+1.00 100 100
+1.20 100 120
+
+220 / 200
+
+*/				
 				
 				
 				
@@ -368,8 +391,10 @@
 					if (fenE1 == null || fenE1 == undefined || fenE1 == "") {
 						return;
 					}else{
-						this.chiYouFenE = fenE1
-						let cyje2 = this.chiYouFenE * this.dangQianJiJinJingZhi
+						//this.chiYouFenE = this.getFenE1();
+						
+						let cyje2 = this.chiYouFenE * 
+							this.dangQianJiJinJingZhi
 						//this.chiYouJinE2.toFixed(2)
 						this.chiYouJinE2 = cyje2.toFixed(2)
 						this.chiYouJinE = this.chiYouJinE2
@@ -377,6 +402,23 @@
 				}
 				//chiYouFenE
 				console.log("showAcountNumber() end");
+			},
+			getFenE1(){
+				console.log("getFenE1");
+				let etfName = this.jjName;
+				let bhl2 = localStorage.getItem("buyHisList")
+				if(bhl2){
+					let arrBhl1 = JSON.parse(bhl2);
+					for(itemb1 of arrBhl1){
+						console.log("itemb1-=>",itemb1);
+						if(itemb1[''+etfName]){
+							let obj3 = itemb1[''+etfName]
+							console.log("obj3-=>",obj3);
+						}
+					}
+				}else{
+					return 0;
+				}
 			},
 			showZRCYlv(){//显示昨日收益，持有收益，持有收益率
 				console.log("showZRCYlv()");

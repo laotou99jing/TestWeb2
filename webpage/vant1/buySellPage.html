@@ -145,7 +145,7 @@
 				stockName:'基金名称',
 				active: 0,
 				subActive: 2,
-				tablActiove:0,
+				tablActive:0,
 				jjName:''
 			}
 		},
@@ -236,7 +236,9 @@
 				console.log("savaToDB",name,cost);
 				
 				let bd1 = localStorage.getItem("buyDic1")
+				let bd2a = localStorage.getItem("buyDic2")
 				console.log("bd1-=>"+bd1);
+				console.log("bd2a-=>"+bd2a);
 				if (bd1 == null || bd1 == undefined || bd1 == "" ){
 					console.log("no data");
 					//let bd2 = {name:cost}
@@ -244,6 +246,13 @@
 					bd2[''+name] = cost;
 					console.log("bd2-=>",bd2);
 					localStorage.setItem("buyDic1",JSON.stringify(bd2))
+					
+					let bd2b = {}
+					let num1A = this.fenE
+					bd2b[''+name] = num1A.toFixed(2)
+					console.log("bd2b-=>",bd2b);
+					localStorage.setItem("buyDic2",JSON.stringify(bd2b))
+					
 				}else{
 					console.log("had data");
 					let data1 = JSON.parse(bd1)
@@ -256,6 +265,21 @@
 					}
 					console.log("data1-=>",data1);
 					localStorage.setItem("buyDic1",JSON.stringify(data1))					
+					let data1b = JSON.parse(bd2a)
+					console.log("data1b-=>"+data1b);
+					
+					if (data1b[name] == null || data1b[name] == undefined) {
+						data1b[''+name] = this.fenE
+					}else{
+						let tmp1 = data1b[name];
+						let numB123 =  parseFloat(tmp1) + 
+							parseFloat(this.fenE)
+						data1b[''+name] = numB123.toFixed(2)
+					}
+					console.log('data1b[name]-=>',data1b[name]);
+					console.log("data1b-=>",data1b);
+					localStorage.setItem("buyDic2",JSON.stringify(data1b))
+					
 				}
 				
 				//buyHisList
@@ -276,8 +300,7 @@
 					bba2[''+name] = this.curPrice+','+cost+','+this.fenE
 					arr2.push(bba2)
 					localStorage.setItem("buyHisList",JSON.stringify(arr2))
-				}
-				
+				} 
 				
 				vant.Notify('存入数据库')
 			}
